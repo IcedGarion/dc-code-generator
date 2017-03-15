@@ -79,11 +79,13 @@ public class testParser
 		assertEquals("Val id", grammar.get(i++));
 	}
 	
+	/*
 	@Test
 	public void testSynt() throws IOException
 	{
 		Parser p = new Parser(new Scanner(inputFileName));
 		
+		//file di input con un programma sintatticamente corretto
 		try
 		{
 			assertTrue(p.parse());
@@ -98,6 +100,7 @@ public class testParser
 	{
 		Parser p = new Parser(new Scanner(inputFileName));
 		
+		//programma sintatticamente non corretto
 		try
 		{
 			p.parse();
@@ -108,5 +111,19 @@ public class testParser
 		{
 			assertEquals("messaggio", e.getMessage());
 		}
+	}
+	
+	*/
+	
+	@Test
+	public void testNotTermDerEmpty()
+	{
+		/*testa le variabili nuove:
+		 * private ArrayList<String> derEmptyProductions;
+		   private ArrayList<String> derEmptyNT;
+		   private ArrayList<String> notTerminals;
+		   
+		   in grammarFill
+		 */
 	}
 }

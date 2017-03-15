@@ -13,6 +13,9 @@ public class Parser
 {
 	private Scanner scanner;
 	private Token currentToken;
+	private ArrayList<String> derEmptyProductions;
+	private ArrayList<String> derEmptyNT;
+	private ArrayList<String> notTerminals;
 	private ArrayList<String> grammar; 	//lista di stringhe che sono tutte le regole della grammatica
 										//formato: un nonTerm seguito da uno o piu term/non term (solo spazi)
 	
@@ -26,6 +29,9 @@ public class Parser
 	{
 		this.scanner = s;
 		grammar = new ArrayList<String>();
+		derEmptyProductions = new ArrayList<String>();
+		derEmptyNT = new ArrayList<String>();
+		notTerminals = new ArrayList<String>();
 		grammarFill(grammarPath);
 	}
 	
@@ -36,13 +42,19 @@ public class Parser
 		
 		while(line != null)
 		{
-			grammar.add(line);
+			grammar.add(line);						//importa la grammatica
+			notTerminals.add(LHS(line));			//aggiunge ai non terminali il non term a sx
+			if(derEmpty(line))
+			{
+				derEmptyNT.add(LHS(line));			//se la regola produce eps, aggiunge a derEmpty
+				derEmptyProductions.add(line);
+			}
 			line = t.readLine();
 		}
 		
 		t.close();
 	}
-	
+
 	public ArrayList<String> getGrammar()
 	{
 		return grammar;
@@ -321,5 +333,11 @@ public class Parser
 	private String follow(String s)
 	{
 		return null;
+	}
+	
+	// calcola se la regola può produrre eps
+	private boolean derEmpty(String line)
+	{
+		return false;
 	}
 }
