@@ -44,70 +44,64 @@ public class Scanner
 			return t;
 		}
 		
-		next = buffer.read();
-		
-		//EOF?
-		if(next == -1)
-			retToken = new Token(TokenType.EOF, null);
-		
-		else
-		{	
-			// scorre tutti i blank iniziali
-			cNext = (char) next;
-			while (cNext == ' ' || cNext == '\n' || cNext == '\r' || cNext == '\t')
-			{
-				next = buffer.read();
-				cNext = (char) next;
-			}
-
-			// controlla ancora se arriva a EOF
-			if (next == -1)
+		do
+		{
+			next = buffer.read();
+			
+			//EOF?
+			if(next == -1)
 				retToken = new Token(TokenType.EOF, null);
-
+			
+			cNext = (char) next;
+		}
+		while(cNext == ' ' || cNext == '\n' || cNext == '\r' || cNext == '\t');
+		
+		if(retToken == null)
+		{
+			// A questo punto ho un carattere non blank: se è una cifra,
+			// controllo int/float
+			sNext = "" + cNext;
+			if(sNext.matches("[0-9]"))
+				retToken = scanNumber(sNext);
 			else
 			{
-				// A questo punto ho un carattere non blank: se è una cifra, controllo int/float
-				sNext = "" + cNext;
-				if (sNext.matches("[0-9]"))
-					retToken = scanNumber(sNext);
-				else
+				// se non è una cifra, controlla se è una keyword e restituisce
+				// n il token associato
+				for(int i = 0; i < KEYWORDS.length; i++)
 				{
-					// se non è una cifra, controlla se è una keyword e restituisce n il token associato
-					for (int i = 0; i < KEYWORDS.length; i++)
+					if(KEYWORDS[i].equals(sNext))
 					{
-						if (KEYWORDS[i].equals(sNext))
-						{
-							next = buffer.read();
-							cNext = (char) next;
+						next = buffer.read();
+						cNext = (char) next;
 
-							// se ha trovato una keyword ma dopo non c'è un blank o EOF (ma c'è un altro char) lancia excp
-							if (next == -1)
-								retToken = new Token(ASSOCIATED_TOKENS[i], null);
-							else if (cNext == ' ' || cNext == '\n' || cNext == '\r' || cNext == '\t') 
-								retToken = new Token(ASSOCIATED_TOKENS[i], null);
-							else 
-								throw new LexicalException("Illegal character: " + cNext + ", no blank");
-						}
-					}
-
-					if(retToken == null)
-					{
-						sNext = "" + cNext;
-						if (sNext.matches(ID_PATTERN))
-						{
-							next = buffer.read();
-							cNext = (char) next;
-
-							if (next == -1)
-								retToken = new Token(TokenType.ID, sNext);
-							else if (cNext == ' ' || cNext == '\n' || cNext == '\r' || cNext == '\t')
-								retToken = new Token(TokenType.ID, sNext);
-							else
-								throw new LexicalException("Illegal character: " + cNext + ", no blank");
-						} 
+						// se ha trovato una keyword ma dopo non c'è un blank o
+						// EOF (ma c'è un altro char) lancia excp
+						if(next == -1)
+							retToken = new Token(ASSOCIATED_TOKENS[i], null);
+						else if(cNext == ' ' || cNext == '\n' || cNext == '\r' || cNext == '\t')
+							retToken = new Token(ASSOCIATED_TOKENS[i], null);
 						else
-							throw new LexicalException("Illegal character: " + cNext);
+							throw new LexicalException("Illegal character: " + cNext + ", no blank");
 					}
+				}
+
+				if(retToken == null)
+				{
+					sNext = "" + cNext;
+					if(sNext.matches(ID_PATTERN))
+					{
+						next = buffer.read();
+						cNext = (char) next;
+
+						if(next == -1)
+							retToken = new Token(TokenType.ID, sNext);
+						else if(cNext == ' ' || cNext == '\n' || cNext == '\r' || cNext == '\t')
+							retToken = new Token(TokenType.ID, sNext);
+						else
+							throw new LexicalException("Illegal character: " + cNext + ", no blank");
+					}
+					else
+						throw new LexicalException("Illegal character: " + cNext);
 				}
 			}
 		}

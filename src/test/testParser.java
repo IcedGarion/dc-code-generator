@@ -2,8 +2,10 @@ package test;
 
 import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import parser.Parser;
@@ -31,7 +33,18 @@ public class testParser
 	}
 	
 	@Test
-	public void testSynt() throws FileNotFoundException
+	public void testGrammar() throws FileNotFoundException, IOException
+	{
+		Parser p = new Parser(new Scanner(fileName));
+		ArrayList<String> grammar = p.grammar();
+		
+		assertEquals("Prog Dcls Stms eof", grammar.get(0));
+		fail("da finire");
+		//ecc...
+	}
+	
+	@Test
+	public void testSynt() throws IOException
 	{
 		Parser p = new Parser(new Scanner(fileName));
 		
@@ -45,7 +58,7 @@ public class testParser
 		}
 	}
 	
-	public void testNoSynt() throws FileNotFoundException
+	public void testNoSynt() throws IOException
 	{
 		Parser p = new Parser(new Scanner(fileName));
 		
@@ -55,7 +68,7 @@ public class testParser
 			
 			fail("Exception expected");
 		}
-		catch(SyntacticException e)
+		catch(Exception e)
 		{
 			assertEquals("messaggio", e.getMessage());
 		}
