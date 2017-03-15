@@ -1,0 +1,15 @@
+Prog Dcls Stms eof
+Dcls Dcl Dcls
+Dcls eps
+Dcl floatdcl id
+Dcl intdcl id
+Stms Stm Stms
+Stms eps
+Stm id assign Val Expr
+Stm print id
+Expr plus Val Expr
+Expr minus Val Expr
+Expr eps
+Val inum
+Val fnum
+Val id
