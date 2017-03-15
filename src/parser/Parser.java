@@ -13,15 +13,20 @@ public class Parser
 {
 	private Scanner scanner;
 	private Token currentToken;
-	private String defaultGrammarPath = "./resources/grammar";
 	private ArrayList<String> grammar; 	//lista di stringhe che sono tutte le regole della grammatica
 										//formato: un nonTerm seguito da uno o piu term/non term (solo spazi)
 	
 	public Parser(Scanner s) throws IOException
 	{
+		//default grammar path
+		this(s, "./resources/grammar");
+	}
+	
+	public Parser(Scanner s, String grammarPath) throws IOException
+	{
 		this.scanner = s;
 		grammar = new ArrayList<String>();
-		grammarFill(defaultGrammarPath);
+		grammarFill(grammarPath);
 	}
 	
 	private void grammarFill(String Path) throws IOException
@@ -306,5 +311,15 @@ public class Parser
 		}
 			
 		return ret;
+	}
+	
+	private String first(String s)
+	{
+		return null;
+	}
+	
+	private String follow(String s)
+	{
+		return null;
 	}
 }
