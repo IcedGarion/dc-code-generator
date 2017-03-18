@@ -80,7 +80,30 @@ public class testParser
 		assertEquals("Val->id", grammar.get(i++));
 	}
 	
-	/*
+	@Test
+	public void testfirst() throws FileNotFoundException, IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(inputFileName));
+		
+		try
+		{
+			assertEquals("floatdcl intdcl", p.first("Dcls->Dcl Dcls"));
+			assertEquals("", p.first("Dcls->eps"));
+			assertEquals("floatdcl", p.first("Dcl->floatdcl id"));
+			assertEquals("id print", p.first("Stms->Stm Stms"));
+			assertEquals("id", p.first("Stm->id assign Val Expr"));
+			assertEquals("minus", p.first("Expr->minus Val Expr"));
+			assertEquals("id", p.first("Val->id"));		
+		}
+		catch(Exception e)
+		{
+			fail("No exception expected");
+		}
+	}
+	
+	//manca testFollow
+	
+	/* TEST FINALI
 	@Test
 	public void testSynt() throws IOException
 	{
@@ -115,16 +138,4 @@ public class testParser
 	}
 	
 	*/
-	
-	@Test
-	public void testNotTermDerEmpty()
-	{
-		/*testa le variabili nuove:
-		 * private ArrayList<String> derEmptyProductions;
-		   private ArrayList<String> derEmptyNT;
-		   private ArrayList<String> notTerminals;
-		   
-		   in grammarFill
-		 */
-	}
 }

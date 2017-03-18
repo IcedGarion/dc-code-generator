@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import scanner.LexicalException;
 import scanner.Scanner;
 import token.Token;
@@ -19,6 +21,7 @@ public class Parser
 	private ArrayList<String> notTerminals;
 	private ArrayList<String> grammar; 	//lista di stringhe che sono tutte le regole della grammatica
 										//formato: un nonTerm seguito da uno o piu term/non term (solo spazi)
+	private HashMap<String, Boolean> visitato;
 	
 	
 	public Parser(Scanner s) throws IOException, SyntacticException
@@ -73,18 +76,19 @@ public class Parser
 	{
 		String nonTerm = "Prog";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> progProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
+		//cioè le uniche regole da considerare
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				progProductions.add(grammar.get(i));
 		}
 		
 		//prog ha una sola regola: prog->Dcls Stms eof
 		//se prox token è un predict di prog, allora parsifica la regola prog->****
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(progProductions.get(0)).contains(nxt.getType()))
 		{
 			parseDcls();
 			parseStms();
@@ -100,23 +104,23 @@ public class Parser
 	{
 		String nonTerm = "Dcls";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> dclsProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				dclsProductions.add(grammar.get(i));
 		}
 		
 		//Dcls ha 2 regole: Dcls->Dcl Dcls
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(dclsProductions.get(0)).contains(nxt.getType()))
 		{
 			parseDcl();
 			parseDcls();
 		}
 		//Dcls->eps
-		else if(predict(nonTerm, startsWithNT.get(1)).contains(nxt.getType()))
+		else if(predict(dclsProductions.get(1)).contains(nxt.getType()))
 		{
 			//PARSE EPS? MATCH CON EPS?
 		}
@@ -125,27 +129,28 @@ public class Parser
 		
 		return true;
 	}
+	
 	private boolean parseDcl() throws LexicalException, IOException, SyntacticException
 	{
 		String nonTerm = "Dcl";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> dclProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				dclProductions.add(grammar.get(i));
 		}
 		
 		// Dcl ha 2 regole: Dcl->floatdcl id
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(dclProductions.get(0)).contains(nxt.getType()))
 		{
 			match(TokenType.FLOATDCL);
 			match(TokenType.ID);
 		}
 		//dcl->intdcl id
-		else if(predict(nonTerm, startsWithNT.get(1)).contains(nxt.getType()))
+		else if(predict(dclProductions.get(1)).contains(nxt.getType()))
 		{
 			match(TokenType.INTDCL);
 			match(TokenType.ID);
@@ -155,27 +160,28 @@ public class Parser
 		
 		return true;
 	}
+	
 	private boolean parseStms() throws LexicalException, IOException, SyntacticException
 	{
 		String nonTerm = "Stms";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> stmsProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				stmsProductions.add(grammar.get(i));
 		}
 		
 		// Dcl ha 2 regole: stms->stm stms
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(stmsProductions.get(0)).contains(nxt.getType()))
 		{
 			parseStm();
 			parseStms();
 		}
 		//stms->eps
-		else if(predict(nonTerm, startsWithNT.get(1)).contains(nxt.getType()))
+		else if(predict(stmsProductions.get(1)).contains(nxt.getType()))
 		{
 			//EPS
 		}
@@ -188,17 +194,17 @@ public class Parser
 	{
 		String nonTerm = "Stm";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> stmProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				stmProductions.add(grammar.get(i));
 		}
 		
 		// Dcl ha 2 regole: stm->id assign val expr
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(stmProductions.get(0)).contains(nxt.getType()))
 		{
 			match(TokenType.ID);
 			match(TokenType.ASSIGN);
@@ -206,7 +212,7 @@ public class Parser
 			parseExpr();
 		}
 		//stm->print id
-		else if(predict(nonTerm, startsWithNT.get(1)).contains(nxt.getType()))
+		else if(predict(stmProductions.get(1)).contains(nxt.getType()))
 		{
 			match(TokenType.PRINT);
 			match(TokenType.ID);
@@ -220,30 +226,30 @@ public class Parser
 	{
 		String nonTerm = "Expr";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> exprProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				exprProductions.add(grammar.get(i));
 		}
 		
 		// Dcl ha 3 regole: Expr->plus Val Expr
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(exprProductions.get(0)).contains(nxt.getType()))
 		{
 			match(TokenType.PLUS);
 			parseVal();
 			parseExpr();
 		}
 		//Expr->minus Val Expr
-		else if(predict(nonTerm, startsWithNT.get(1)).contains(nxt.getType()))
+		else if(predict(exprProductions.get(1)).contains(nxt.getType()))
 		{
 			match(TokenType.MINUS);
 			parseVal();
 			parseExpr();
 		}
-		else if(predict(nonTerm, startsWithNT.get(2)).contains(nxt.getType()))
+		else if(predict(exprProductions.get(2)).contains(nxt.getType()))
 		{
 			//EPS
 		}
@@ -257,24 +263,24 @@ public class Parser
 	{
 		String nonTerm = "Val";
 		Token nxt = scanner.peekToken();
-		ArrayList<String> startsWithNT = new ArrayList<String>();
+		ArrayList<String> valProductions = new ArrayList<String>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term
 		for(int i=0; i<grammar.size(); i++)
 		{
 			if(grammar.get(i).startsWith(nonTerm))
-				startsWithNT.add(grammar.get(i));
+				valProductions.add(grammar.get(i));
 		}
 		
 		// Dcl ha 3 regole: Val->inum
-		if(predict(nonTerm, startsWithNT.get(0)).contains(nxt.getType()))
+		if(predict(valProductions.get(0)).contains(nxt.getType()))
 			match(TokenType.INUM);
 	
 		//Expr->minus Val Expr
-		else if(predict(nonTerm, startsWithNT.get(1)).contains(nxt.getType()))
+		else if(predict(valProductions.get(1)).contains(nxt.getType()))
 			match(TokenType.FNUM);
 
-		else if(predict(nonTerm, startsWithNT.get(2)).contains(nxt.getType()))
+		else if(predict(valProductions.get(2)).contains(nxt.getType()))
 			match(TokenType.ID);
 		
 		else
@@ -283,9 +289,17 @@ public class Parser
 		return true;
 	}
 	
-	private ArrayList<String> predict(String nT, String production)
+	// calcola se la regola può produrre eps
+	private boolean derEmpty(String line) throws SyntacticException
 	{
-		return null;
+		return(RHS(line).matches("eps "));
+	}
+	
+	private String scanProduction(String production, int index)
+	{
+		String tmp[] = production.split(" ");
+
+		return tmp[index];
 	}
 	
 	public String LHS(String production) throws SyntacticException
@@ -295,7 +309,10 @@ public class Parser
 	
 	public String RHS(String production) throws SyntacticException
 	{
-		return splitter(production)[1];
+		if(production.contains("->"))
+			return splitter(production)[1];
+		else
+			return production;
 	}
 	
 	private String[] splitter(String production) throws SyntacticException
@@ -308,45 +325,42 @@ public class Parser
 		return a;
 	}
 	
-	private String first(String inNT) throws Exception
+	public String first(String inProduction) throws Exception
 	{
-		boolean[] visitato = new boolean[notTerminals.size()];
-		String ret = "";
-		int i = 0;
+		visitato = new HashMap<String, Boolean>();
 		
-		if(! notTerminals.contains(inNT))
-			throw new Exception("Not terminal expected");
+		for(int j=0; j<notTerminals.size(); j++)
+			visitato.put(notTerminals.get(j), false);
 		
-		for(int j=0; j<visitato.length; j++)
-			visitato[j] = false;
+		return firstRic(inProduction).trim();
+	}
+	
+	public String firstRic(String inProduction) throws Exception
+	{
+		String ret = "", beta, firstBeta, secondBeta;
 		
-		//scorre tutte le regole
-		for(String currentProduction : grammar)
-		{	
-			//prende solo quelle che hanno il non terminale di input come LHS
-			if(inNT.equals(LHS(currentProduction)))
-			{
-				String firstProductionWord = scanProduction(currentProduction, i);
-				
-				//la prima parola di RHS è eps
-				if(firstProductionWord.equals("eps"))
-					ret = "";
-				
-				//la prima parola RHS è un term
-				else if(! notTerminals.contains(firstProductionWord))
-				{
-					
-				}
-				//la prima parola RHS è un non terminale
-				else
-				{
-					if(true)
-					{
-						i++;
-					}
-				}
-			}
+		beta = RHS(inProduction);
+		firstBeta = scanProduction(beta, 0);
 			
+		if(firstBeta.equals("eps"))
+			ret = "";
+		//caso beta terminale
+		else if(! notTerminals.contains(firstBeta))
+			ret += " " + firstBeta;
+		//caso beta non term, e non visitato
+		else if(! visitato.get(firstBeta))
+		{
+			visitato.put(firstBeta, true);
+			
+			for(String p : grammar)
+				if(LHS(p).equals(firstBeta))
+					ret += " " + first(p);
+			
+			if(derEmpty(firstBeta))
+			{
+				secondBeta = scanProduction(beta, 1);
+				ret += " " + first(secondBeta);
+			}
 		}
 		
 		return ret;
@@ -357,15 +371,8 @@ public class Parser
 		return null;
 	}
 	
-	// calcola se la regola può produrre eps
-	private boolean derEmpty(String line) throws SyntacticException
+	private ArrayList<String> predict(String production)
 	{
-		return(RHS(line).matches("eps "));
-	}
-	
-	private String scanProduction(String production, int next)
-	{
-		//se next è a x, ti ritorna l'x-esima parola di RHS
 		return null;
 	}
 }
