@@ -11,6 +11,7 @@ import token.TokenType;
 
 public class Parser
 {
+	private String defaultGrammarPath = "./resources/grammar";
 	private Scanner scanner;
 	private Token currentToken;
 	private ArrayList<String> derEmptyProductions;
@@ -19,30 +20,25 @@ public class Parser
 	private ArrayList<String> grammar; 	//lista di stringhe che sono tutte le regole della grammatica
 										//formato: un nonTerm seguito da uno o piu term/non term (solo spazi)
 	
-	public Parser(Scanner s) throws IOException
-	{
-		//default grammar path
-		this(s, "./resources/grammar");
-	}
 	
-	public Parser(Scanner s, String grammarPath) throws IOException
+	public Parser(Scanner s) throws IOException, SyntacticException
 	{
 		this.scanner = s;
 		grammar = new ArrayList<String>();
 		derEmptyProductions = new ArrayList<String>();
 		derEmptyNT = new ArrayList<String>();
 		notTerminals = new ArrayList<String>();
-		grammarFill(grammarPath);
+		grammarFill(defaultGrammarPath);
 	}
 	
-	private void grammarFill(String Path) throws IOException
+	private void grammarFill(String Path) throws IOException, SyntacticException
 	{
 		BufferedReader t = new BufferedReader(new FileReader(Path));
 		String line = t.readLine();
 		
 		while(line != null)
 		{
-			grammar.add(line);						//importa la grammatica
+			grammar.add(line);						//importa  
 			notTerminals.add(LHS(line));			//aggiunge ai non terminali il non term a sx
 			if(derEmpty(line))
 			{
@@ -292,42 +288,68 @@ public class Parser
 		return null;
 	}
 	
-	public String LHS(String production)
+	public String LHS(String production) throws SyntacticException
 	{
+		return splitter(production)[0];
+	}
+	
+	public String RHS(String production) throws SyntacticException
+	{
+		return splitter(production)[1];
+	}
+	
+	private String[] splitter(String production) throws SyntacticException
+	{
+		String[] a = production.split("->");
+		
+		if(a.length != 2)
+			throw new SyntacticException("Wrong/no separator");
+		
+		return a;
+	}
+	
+	private String first(String inNT) throws Exception
+	{
+		boolean[] visitato = new boolean[notTerminals.size()];
 		String ret = "";
 		int i = 0;
-		char c = production.charAt(i);
 		
-		while(c != ' ')
-		{
-			ret += c;
-			c = production.charAt(++i);
-		}
+		if(! notTerminals.contains(inNT))
+			throw new Exception("Not terminal expected");
 		
-		return ret;
-	}
-	
-	public String RHS(String production)
-	{
-		String splitted[];
-		String ret = "";
+		for(int j=0; j<visitato.length; j++)
+			visitato[j] = false;
 		
-		splitted = production.split(" ");
-		
-		for(int i=1; i<splitted.length; i++)
-		{
-			if(i != splitted.length -1)
-				ret += splitted[i] + " ";
-			else
-				ret += splitted[i];
-		}
+		//scorre tutte le regole
+		for(String currentProduction : grammar)
+		{	
+			//prende solo quelle che hanno il non terminale di input come LHS
+			if(inNT.equals(LHS(currentProduction)))
+			{
+				String firstProductionWord = scanProduction(currentProduction, i);
+				
+				//la prima parola di RHS è eps
+				if(firstProductionWord.equals("eps"))
+					ret = "";
+				
+				//la prima parola RHS è un term
+				else if(! notTerminals.contains(firstProductionWord))
+				{
+					
+				}
+				//la prima parola RHS è un non terminale
+				else
+				{
+					if(true)
+					{
+						i++;
+					}
+				}
+			}
 			
+		}
+		
 		return ret;
-	}
-	
-	private String first(String s)
-	{
-		return null;
 	}
 	
 	private String follow(String s)
@@ -336,8 +358,14 @@ public class Parser
 	}
 	
 	// calcola se la regola può produrre eps
-	private boolean derEmpty(String line)
+	private boolean derEmpty(String line) throws SyntacticException
 	{
-		return false;
+		return(RHS(line).matches("eps "));
+	}
+	
+	private String scanProduction(String production, int next)
+	{
+		//se next è a x, ti ritorna l'x-esima parola di RHS
+		return null;
 	}
 }
