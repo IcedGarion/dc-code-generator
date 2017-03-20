@@ -12,6 +12,7 @@ import org.junit.Test;
 import parser.Parser;
 import parser.SyntacticException;
 import scanner.Scanner;
+import token.TokenType;
 
 public class testParser
 {
@@ -112,7 +113,27 @@ public class testParser
 			assertEquals("", p.follow("Prog"));
 			assertEquals("", p.follow("Expr"));
 			assertTrue(("plus minus".compareTo(p.follow("Val")) == 0) ||
-					("minus plus".compareTo(p.follow("Val")) == 0));
+					("minus plus".compareTo(p.follow("Val")) == 0));	
+		}
+		catch(Exception e)
+		{
+			fail("No exception expected");
+		}
+	}
+	
+	@Test
+	public void testPredict() throws FileNotFoundException, IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(inputFileName));
+		ArrayList<TokenType> predict;
+		
+		try
+		{
+			predict = p.predict("Prog->Dcls Stms eof");
+			assertTrue(predict.contains(TokenType.INTDCL));
+			assertTrue(predict.contains(TokenType.FLOATDCL));
+			assertTrue(predict.contains(TokenType.ID));
+			assertTrue(predict.contains(TokenType.PRINT));
 			
 		}
 		catch(Exception e)
@@ -121,10 +142,9 @@ public class testParser
 		}
 	}
 	
-	
-	/* TEST FINALI
+	/*
 	@Test
-	public void testSynt() throws IOException
+	public void testParseOk() throws IOException, SyntacticException
 	{
 		Parser p = new Parser(new Scanner(inputFileName));
 		
@@ -135,13 +155,16 @@ public class testParser
 		}
 		catch(Exception e)
 		{
-			fail("No exception expected");
+			e.printStackTrace(System.out);
+			System.out.println(e.getMessage());
+			fail();
 		}
 	}
 	
-	public void testNoSynt() throws IOException
+	@Test
+	public void testParseNo() throws IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(inputFileName));
+		Parser p = new Parser(new Scanner(dummyFileName));
 		
 		//programma sintatticamente non corretto
 		try
@@ -152,9 +175,10 @@ public class testParser
 		}
 		catch(Exception e)
 		{
-			assertEquals("messaggio", e.getMessage());
+			e.printStackTrace(System.out);
+			System.out.println(e.getMessage());
+			fail();
 		}
 	}
-	
 	*/
 }

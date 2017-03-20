@@ -77,16 +77,17 @@ public class Parser
 			throw new SyntacticException();
 	}
 	
-	public boolean parse() throws SyntacticException, LexicalException, IOException
+	public boolean parse() throws Exception
 	{
 		return parseProg();
 	}
 	
-	private boolean parseProg() throws LexicalException, IOException, SyntacticException
+	private boolean parseProg() throws Exception
 	{
 		String nonTerm = "Prog";
 		Token nxt = scanner.peekToken();
 		ArrayList<String> progProductions = new ArrayList<String>();
+		
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
 		//cioè le uniche regole da considerare
@@ -97,7 +98,13 @@ public class Parser
 		}
 		
 		//prog ha una sola regola: prog->Dcls Stms eof
+		 
+		
+		String a = "Prog->Dcls Stms eof";
 		//se prox token è un predict di prog, allora parsifica la regola prog->****
+		
+		ArrayList<TokenType> tmp = predict(progProductions.get(0));
+		
 		if(predict(progProductions.get(0)).contains(nxt.getType()))
 		{
 			parseDcls();
@@ -110,7 +117,7 @@ public class Parser
 		return true;
 	}
 	
-	private boolean parseDcls() throws LexicalException, IOException, SyntacticException
+	private boolean parseDcls() throws Exception
 	{
 		String nonTerm = "Dcls";
 		Token nxt = scanner.peekToken();
@@ -141,7 +148,7 @@ public class Parser
 		return true;
 	}
 	
-	private boolean parseDcl() throws LexicalException, IOException, SyntacticException
+	private boolean parseDcl() throws Exception
 	{
 		String nonTerm = "Dcl";
 		Token nxt = scanner.peekToken();
@@ -172,7 +179,7 @@ public class Parser
 		return true;
 	}
 	
-	private boolean parseStms() throws LexicalException, IOException, SyntacticException
+	private boolean parseStms() throws Exception
 	{
 		String nonTerm = "Stms";
 		Token nxt = scanner.peekToken();
@@ -202,7 +209,7 @@ public class Parser
 		
 		return true;
 	}
-	private boolean parseStm() throws LexicalException, IOException, SyntacticException
+	private boolean parseStm() throws Exception
 	{
 		String nonTerm = "Stm";
 		Token nxt = scanner.peekToken();
@@ -234,7 +241,7 @@ public class Parser
 		
 		return true;
 	}
-	private boolean parseExpr() throws LexicalException, IOException, SyntacticException
+	private boolean parseExpr() throws Exception
 	{
 		String nonTerm = "Expr";
 		Token nxt = scanner.peekToken();
@@ -272,7 +279,7 @@ public class Parser
 		return true;
 	}
 	
-	private boolean parseVal() throws LexicalException, IOException, SyntacticException
+	private boolean parseVal() throws Exception
 	{
 		String nonTerm = "Val";
 		Token nxt = scanner.peekToken();
@@ -475,8 +482,61 @@ public class Parser
 		return ret;
 	}
 	
-	private ArrayList<String> predict(String production)
+	public ArrayList<TokenType> predict(String production) throws Exception
 	{
-		return null;
+		ArrayList<String> ret = new ArrayList<String>();
+		String first[];
+		
+		first = first(production).split(" ");
+		for(String s : first)
+			ret.add(s);
+		
+		return stringToToken(ret);
+	}
+
+	private ArrayList<TokenType> stringToToken(ArrayList<String> prediction)
+	{
+		ArrayList<TokenType> ret = new ArrayList<TokenType>();
+		
+		for(String s : prediction)
+		{
+			switch(s)
+			{
+				case "eof": 
+					ret.add(TokenType.EOF);
+					break;
+				case "intdcl":
+					ret.add(TokenType.INTDCL);
+					break;
+				case "floatdlc":
+					ret.add(TokenType.FLOATDCL);
+					break;
+				case "assign":
+					ret.add(TokenType.ASSIGN);
+					break;
+				case "plus":
+					ret.add(TokenType.PLUS);
+					break;
+				case "minus":
+					ret.add(TokenType.MINUS);
+					break;
+				case "print":
+					ret.add(TokenType.PRINT);
+					break;
+				case "inum":
+					ret.add(TokenType.INUM);
+					break;
+				case "fnum":
+					ret.add(TokenType.FNUM);
+					break;
+				case "eps":
+					System.out.println("Case eps!");
+					break;
+				default:
+					System.out.println("Defalut? " + s);
+			}
+		}
+		
+		return ret;
 	}
 }
