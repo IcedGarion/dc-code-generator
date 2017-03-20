@@ -109,6 +109,10 @@ public class testParser
 		try
 		{
 			assertEquals("eof", p.follow("Stms"));
+			assertEquals("", p.follow("Prog"));
+			assertEquals("", p.follow("Expr"));
+			assertTrue(("plus minus".compareTo(p.follow("Val")) == 0) ||
+					("minus plus".compareTo(p.follow("Val")) == 0));
 			
 		}
 		catch(Exception e)
