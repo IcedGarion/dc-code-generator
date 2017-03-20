@@ -101,7 +101,22 @@ public class testParser
 		}
 	}
 	
-	//manca testFollow
+	@Test
+	public void testFollow() throws FileNotFoundException, IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(inputFileName));
+		
+		try
+		{
+			assertEquals("eof", p.follow("Stms"));
+			
+		}
+		catch(Exception e)
+		{
+			fail("No exception expected");
+		}
+	}
+	
 	
 	/* TEST FINALI
 	@Test

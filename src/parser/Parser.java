@@ -366,9 +366,82 @@ public class Parser
 		return ret;
 	}
 	
-	private String follow(String s)
+	//ritorna le parole (RHS) seguenti al non terminale input
+	private ArrayList<String> segue(String notTerminal)
 	{
-		return null;
+		String[] lineSplitted;
+		ArrayList<String> ret = new ArrayList<String>();
+		boolean end = false;
+		
+		//scorre ogni regola
+		for(String prod : grammar)
+		{
+			//divide la regola in parole
+			lineSplitted = prod.split(" ");
+			end = false;
+			
+			//scorre tutte le parole (dalla seconda, cioè inizio RHS)
+			for(int i=1; i<lineSplitted.length && !end; i++)
+			{
+				if(lineSplitted[i].equals(notTerminal))
+				{
+					//se trova una parola uguale al non term
+					//aggiunge a una lista la parola seguente
+					if(i<lineSplitted.length - 1)
+						ret.add(lineSplitted[i+1]);
+					
+					end = true;
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	public String follow(String inNT) throws Exception
+	{
+		visitato = new HashMap<String, Boolean>();
+		
+		if(! notTerminals.contains(inNT))
+			return "";
+		
+		for(int j=0; j<notTerminals.size(); j++)
+			visitato.put(notTerminals.get(j), false);
+		
+		return followRic(inNT);
+		
+	}
+	
+	private String followRic(String inNT) throws Exception
+	{
+		String ret = "", notTerm;
+		ArrayList<String> followers;
+		
+		if(! visitato.get(inNT))
+		{
+			visitato.put(inNT, true);
+			followers = segue(inNT);			//cerca i term/nonTerm che seguono inNT
+			
+			for(String word : followers)		//le scorre e cerca a quale regola sono associate
+				for(String prod : grammar)
+				{
+					/*scorre le parole che seguono inNT:
+					 * scorre tutta la grammatica; se trova che una di queste parole è un LHS
+					 * allora aggiunge il first di questa regola (perchè un non term)
+					 */
+					notTerm = LHS(prod);
+					if(notTerm.equals(word))	//esiste una regola con LHS quel follower
+					{
+						ret += first(prod);
+						if(derEmptyNT.contains(notTerm))
+							ret += follow(LHS(prod));
+					}
+					else						//altrimenti, quella parola è un terminale e allora lo aggiunge subito
+						ret += notTerm;
+				}
+		}
+		
+		return ret;
 	}
 	
 	private ArrayList<String> predict(String production)
