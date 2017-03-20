@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import scanner.LexicalException;
 import scanner.Scanner;
 import token.Token;
@@ -38,14 +41,21 @@ public class Parser
 	{
 		BufferedReader t = new BufferedReader(new FileReader(Path));
 		String line = t.readLine();
+		String lhs;
+		boolean contains;
 		
 		while(line != null)
 		{
-			grammar.add(line);						//importa  
-			notTerminals.add(LHS(line));			//aggiunge ai non terminali il non term a sx
+			grammar.add(line);						//importa la grammatica da file
+			
+			lhs = LHS(line);
+			contains = notTerminals.contains(lhs);
+			if(! contains)
+				notTerminals.add(lhs);			//aggiunge ai non terminali il non term a sx (se non c'è già)
 			if(derEmpty(line))
 			{
-				derEmptyNT.add(LHS(line));			//se la regola produce eps, aggiunge a derEmpty
+				if(! contains)
+					derEmptyNT.add(lhs);			//se la regola produce eps, aggiunge a derEmpty
 				derEmptyProductions.add(line);
 			}
 			line = t.readLine();
@@ -122,7 +132,8 @@ public class Parser
 		//Dcls->eps
 		else if(predict(dclsProductions.get(1)).contains(nxt.getType()))
 		{
-			//PARSE EPS? MATCH CON EPS?
+			//PARSE EPS
+			return true;
 		}
 		else
 			throw new SyntacticException();
@@ -184,6 +195,7 @@ public class Parser
 		else if(predict(stmsProductions.get(1)).contains(nxt.getType()))
 		{
 			//EPS
+			return true;
 		}
 		else
 			throw new SyntacticException();
@@ -252,6 +264,7 @@ public class Parser
 		else if(predict(exprProductions.get(2)).contains(nxt.getType()))
 		{
 			//EPS
+			return true;
 		}
 		else
 			throw new SyntacticException();
@@ -366,7 +379,7 @@ public class Parser
 		return ret;
 	}
 	
-	//ritorna le parole (RHS) seguenti al non terminale input
+	//ritorna la parola (RHS) seguente al non terminale input
 	private ArrayList<String> segue(String notTerminal)
 	{
 		String[] lineSplitted;
@@ -400,6 +413,12 @@ public class Parser
 	
 	public String follow(String inNT) throws Exception
 	{
+		String ret = "";
+		Set<String> noDup = new HashSet<>();	//set può eliminare i duplicati
+		ArrayList<String> tmpList;				//appoggio per il set
+		String[] tmpArray;
+		Iterator<String> t;
+		
 		visitato = new HashMap<String, Boolean>();
 		
 		if(! notTerminals.contains(inNT))
@@ -408,8 +427,20 @@ public class Parser
 		for(int j=0; j<notTerminals.size(); j++)
 			visitato.put(notTerminals.get(j), false);
 		
-		return followRic(inNT);
+		//da rivedere eliminazione duplicati
+		//trasformo in array per passare in arraylist, poi aggiungo tutto a Set, che elimina duplicati
+		ret = followRic(inNT).trim();
+		tmpArray = ret.split(" ");
+		tmpList = new ArrayList<String>(Arrays.asList(tmpArray));
+		noDup.addAll(tmpList);
 		
+		ret = "";
+		t = noDup.iterator();
+			 
+		while(t.hasNext())
+			ret += " " + t.next();
+		
+		return ret.trim();
 	}
 	
 	private String followRic(String inNT) throws Exception
@@ -432,12 +463,12 @@ public class Parser
 					notTerm = LHS(prod);
 					if(notTerm.equals(word))	//esiste una regola con LHS quel follower
 					{
-						ret += first(prod);
+						ret += " " + first(prod);
 						if(derEmptyNT.contains(notTerm))
-							ret += follow(LHS(prod));
+							ret += " " + follow(LHS(prod));
 					}
-					else						//altrimenti, quella parola è un terminale e allora lo aggiunge subito
-						ret += notTerm;
+					else if(! notTerminals.contains(word))//altrimenti, se quella parola è un terminale lo aggiunge subito
+						ret += " " + word;
 				}
 		}
 		
