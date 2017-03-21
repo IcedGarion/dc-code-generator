@@ -9,13 +9,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import ast.LangType;
+import ast.NodeAST;
+import ast.NodeDecl;
+import ast.NodeProgram;
+import ast.NodeStm;
 import scanner.LexicalException;
 import scanner.Scanner;
+import symTable.SymTable;
 import token.Token;
 import token.TokenType;
 
 public class Parser
 {
+	private SymTable symbolTable;
 	private String defaultGrammarPath = "./resources/grammar";
 	private Scanner scanner;
 	private Token currentToken;
@@ -77,16 +85,18 @@ public class Parser
 			throw new SyntacticException();
 	}
 	
-	public boolean parse() throws Exception
+	public NodeProgram parse() throws Exception
 	{
 		return parseProg();
 	}
 	
-	private boolean parseProg() throws Exception
+	private NodeProgram parseProg() throws Exception
 	{
 		String nonTerm = "Prog";
 		Token nxt = scanner.peekToken();
 		ArrayList<String> progProductions = new ArrayList<String>();
+		ArrayList<NodeDecl> decls = new ArrayList<NodeDecl>();
+		ArrayList<NodeStm> stms = new ArrayList<NodeStm>();
 		
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
@@ -103,25 +113,24 @@ public class Parser
 		String a = "Prog->Dcls Stms eof";
 		//se prox token è un predict di prog, allora parsifica la regola prog->****
 		
-		ArrayList<TokenType> tmp = predict(progProductions.get(0));
-		
 		if(predict(progProductions.get(0)).contains(nxt.getType()))
 		{
-			parseDcls();
-			parseStms();
+			decls.addAll(parseDcls());
+			stms.addAll(parseStms());
 			match(TokenType.EOF);
 		}
 		else
 			throw new SyntacticException();
 		
-		return true;
-	}
+		return new NodeProgram(decls, stms);
+	}		
 	
-	private boolean parseDcls() throws Exception
+	private ArrayList<NodeDecl> parseDcls() throws Exception
 	{
 		String nonTerm = "Dcls";
 		Token nxt = scanner.peekToken();
 		ArrayList<String> dclsProductions = new ArrayList<String>();
+		ArrayList<NodeDecl> ret = new ArrayList<NodeDecl>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
 		for(int i=0; i<grammar.size(); i++)
@@ -133,26 +142,28 @@ public class Parser
 		//Dcls ha 2 regole: Dcls->Dcl Dcls
 		if(predict(dclsProductions.get(0)).contains(nxt.getType()))
 		{
-			parseDcl();
-			parseDcls();
+			ret.add(parseDcl());
+			ret.addAll(parseDcls());
 		}
 		//Dcls->eps
 		else if(predict(dclsProductions.get(1)).contains(nxt.getType()))
 		{
 			//PARSE EPS
-			return true;
+			return ret;
 		}
 		else
 			throw new SyntacticException();
 		
-		return true;
+		return ret;
 	}
 	
-	private boolean parseDcl() throws Exception
+	private NodeDecl parseDcl() throws Exception
 	{
 		String nonTerm = "Dcl";
 		Token nxt = scanner.peekToken();
 		ArrayList<String> dclProductions = new ArrayList<String>();
+		NodeDecl ret = null;
+		
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
 		for(int i=0; i<grammar.size(); i++)
@@ -166,24 +177,27 @@ public class Parser
 		{
 			match(TokenType.FLOATDCL);
 			match(TokenType.ID);
+			ret = new NodeDecl(nxt.getValue(), LangType.FLOAT);
 		}
 		//dcl->intdcl id
 		else if(predict(dclProductions.get(1)).contains(nxt.getType()))
 		{
 			match(TokenType.INTDCL);
 			match(TokenType.ID);
+			ret = new NodeDecl(nxt.getValue(), LangType.INT);
 		}
 		else
 			throw new SyntacticException();
 		
-		return true;
+		return ret;
 	}
 	
-	private boolean parseStms() throws Exception
+	private ArrayList<NodeStm> parseStms() throws Exception
 	{
 		String nonTerm = "Stms";
 		Token nxt = scanner.peekToken();
 		ArrayList<String> stmsProductions = new ArrayList<String>();
+		ArrayList<NodeStm> ret = new ArrayList<NodeStm>();
 		
 		//agginge a una lista le regole che hanno come LHS questo non Term
 		for(int i=0; i<grammar.size(); i++)
@@ -195,21 +209,24 @@ public class Parser
 		// Dcl ha 2 regole: stms->stm stms
 		if(predict(stmsProductions.get(0)).contains(nxt.getType()))
 		{
-			parseStm();
-			parseStms();
+			ret.add(parseStm());
+			ret.addAll(parseStms());
 		}
 		//stms->eps
 		else if(predict(stmsProductions.get(1)).contains(nxt.getType()))
 		{
 			//EPS
-			return true;
+			return ret;
 		}
 		else
 			throw new SyntacticException();
 		
-		return true;
+		return ret;
 	}
-	private boolean parseStm() throws Exception
+	
+	
+	//ritorna sempre null da qua in poi
+	private NodeStm parseStm() throws Exception
 	{
 		String nonTerm = "Stm";
 		Token nxt = scanner.peekToken();
@@ -239,9 +256,11 @@ public class Parser
 		else
 			throw new SyntacticException();
 		
-		return true;
+		return null;
 	}
-	private boolean parseExpr() throws Exception
+	
+	
+	private NodeAST parseExpr() throws Exception
 	{
 		String nonTerm = "Expr";
 		Token nxt = scanner.peekToken();
@@ -271,15 +290,15 @@ public class Parser
 		else if(predict(exprProductions.get(2)).contains(nxt.getType()))
 		{
 			//EPS
-			return true;
+			return null;
 		}
 		else
 			throw new SyntacticException();
 		
-		return true;
+		return null;
 	}
 	
-	private boolean parseVal() throws Exception
+	private NodeAST parseVal() throws Exception
 	{
 		String nonTerm = "Val";
 		Token nxt = scanner.peekToken();
@@ -306,7 +325,7 @@ public class Parser
 		else
 			throw new SyntacticException();
 		
-		return true;
+		return null;
 	}
 	
 	// calcola se la regola può produrre eps
