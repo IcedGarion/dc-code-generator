@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import ast.LangType;
 import ast.NodeAST;
 import ast.NodeDecl;
@@ -21,18 +20,60 @@ import symTable.SymTable;
 import token.Token;
 import token.TokenType;
 
-public class Parser
+public class ParserLungo
 {
 	private SymTable symbolTable;
 	private String defaultGrammarPath = "./resources/grammar";
 	private Scanner scanner;
 	private Token currentToken;
-
+	private ArrayList<String> derEmptyProductions;
+	private ArrayList<String> derEmptyNT;
+	private ArrayList<String> notTerminals;
+	private ArrayList<String> grammar; 	//lista di stringhe che sono tutte le regole della grammatica
+										//formato: un nonTerm seguito da uno o piu term/non term (solo spazi)
+	private HashMap<String, Boolean> visitato;
 	
 	
-	public Parser(Scanner s) throws IOException, SyntacticException
+	public ParserLungo(Scanner s) throws IOException, SyntacticException
 	{
 		this.scanner = s;
+		grammar = new ArrayList<String>();
+		derEmptyProductions = new ArrayList<String>();
+		derEmptyNT = new ArrayList<String>();
+		notTerminals = new ArrayList<String>();
+		grammarFill(defaultGrammarPath);
+	}
+	
+	private void grammarFill(String Path) throws IOException, SyntacticException
+	{
+		BufferedReader t = new BufferedReader(new FileReader(Path));
+		String line = t.readLine();
+		String lhs;
+		boolean contains;
+		
+		while(line != null)
+		{
+			grammar.add(line);						//importa la grammatica da file
+			
+			lhs = LHS(line);
+			contains = notTerminals.contains(lhs);
+			if(! contains)
+				notTerminals.add(lhs);			//aggiunge ai non terminali il non term a sx (se non c'è già)
+			if(derEmpty(line))
+			{
+				if(! contains)
+					derEmptyNT.add(lhs);			//se la regola produce eps, aggiunge a derEmpty
+				derEmptyProductions.add(line);
+			}
+			line = t.readLine();
+		}
+		
+		t.close();
+	}
+
+	public ArrayList<String> getGrammar()
+	{
+		return grammar;
 	}
 	
 	private void match(TokenType type) throws SyntacticException, LexicalException, IOException
@@ -50,19 +91,28 @@ public class Parser
 	
 	private NodeProgram parseProg() throws Exception
 	{
+		String nonTerm = "Prog";
 		Token nxt = scanner.peekToken();
+		ArrayList<String> progProductions = new ArrayList<String>();
 		ArrayList<NodeDecl> decls = new ArrayList<NodeDecl>();
 		ArrayList<NodeStm> stms = new ArrayList<NodeStm>();
-		ArrayList<String> progPredict = new ArrayList<String>();
 		
-		progPredict.add("intdcl");
-		progPredict.add("floatdcl");
-		progPredict.add("id");
-		progPredict.add("print");
-		progPredict.add("eof");
 		
+		//agginge a una lista le regole che hanno come LHS questo non Term (prog)
+		//cioè le uniche regole da considerare
+		for(int i=0; i<grammar.size(); i++)
+		{
+			if(grammar.get(i).startsWith(nonTerm))
+				progProductions.add(grammar.get(i));
+		}
+		
+		//prog ha una sola regola: prog->Dcls Stms eof
+		 
+		
+		String a = "Prog->Dcls Stms eof";
 		//se prox token è un predict di prog, allora parsifica la regola prog->****
-		if(progPredict.contains(nxt.getType()))
+		
+		if(predict(progProductions.get(0)).contains(nxt.getType()))
 		{
 			decls.addAll(parseDcls());
 			stms.addAll(parseStms());
