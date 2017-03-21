@@ -20,6 +20,7 @@ import symTable.SymTable;
 import token.Token;
 import token.TokenType;
 
+/*FORSE É SBAGLIATA SOLO LA PREDICT E LE VARIE FUNZIONI RICORSIVE PARSEX()*/
 public class ParserLungo
 {
 	private SymTable symbolTable;
