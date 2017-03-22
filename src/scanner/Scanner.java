@@ -36,6 +36,7 @@ public class Scanner
 		char cNext;
 		String sNext;
 		Token retToken = null;
+		boolean trovato = false;
 		
 		if(currentToken != null)
 		{
@@ -67,10 +68,11 @@ public class Scanner
 			{
 				// se non è una cifra, controlla se è una keyword e restituisce
 				// n il token associato
-				for(int i = 0; i < KEYWORDS.length; i++)
+				for(int i = 0; i < KEYWORDS.length && ! trovato; i++)
 				{
 					if(KEYWORDS[i].equals(sNext))
 					{
+						trovato = true;
 						next = buffer.read();
 						cNext = (char) next;
 

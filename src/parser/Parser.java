@@ -30,7 +30,7 @@ public class Parser
 		if(type.equals(scanner.peekToken().getType()))
 			currentToken = scanner.nextToken();
 		else
-			throw new SyntacticException();
+			throw new SyntacticException("Expected "+type+" but was "+scanner.peekToken().getType());
 	}
 	
 	public NodeProgram parse() throws Exception
@@ -106,9 +106,7 @@ public class Parser
 				//Dcl->floatdcl id
 				match(TokenType.FLOATDCL);
 				match(TokenType.ID);
-				String id1 = nxt.getValue();
-				String id = scanner.peekToken().getValue();
-				ret = new NodeDecl(scanner.peekToken().getValue(), LangType.FLOAT);
+				ret = new NodeDecl(currentToken.getValue(), LangType.FLOAT);		
 				break;
 			}
 			case INTDCL:
@@ -117,7 +115,7 @@ public class Parser
 				match(TokenType.INTDCL);
 				match(TokenType.ID);
 				String id = nxt.getValue();
-				ret = new NodeDecl(scanner.peekToken().getValue(), LangType.INT);
+				ret = new NodeDecl(currentToken.getValue(), LangType.INT);
 				break;
 			}
 			default:

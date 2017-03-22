@@ -32,7 +32,7 @@ public class testScanner
 		writer.write(";\nà\n123g\n1.5x\nfb\ni aa\npa\n");
 		writer.close();
 	}
-	
+	/*
 	
 	@Test
 	public void testException()
@@ -182,7 +182,7 @@ public class testScanner
 		}
 	}
 	 
-	 
+	 */
 	@Test
 	public void testPeek()
 	{
