@@ -15,8 +15,10 @@ import scanner.Scanner;
 
 public class testParser
 {
-	private String inputFileName = "./resources/testParse";
+	private String dclsOnlyFileName = "./resources/dclsParse";
+	private String dclsPrintsOnlyFileName = "./resources/dclsPrintsParse";
 	private String dummyFileName = "./resources/dummyParse";
+	private String assignCostIdOnlyFileName = "./resources/assignCostParse";
 	
 	@Before
 	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
@@ -24,36 +26,22 @@ public class testParser
 		//scrive file per i test
 		PrintWriter writer;
 
-		writer = new PrintWriter(inputFileName, "UTF-8");
+		writer = new PrintWriter(dclsOnlyFileName, "UTF-8");
 		writer.write("f b\ni a\n");
+		writer.close();
+		
+		writer = new PrintWriter(dclsPrintsOnlyFileName, "UTF-8");
+		writer.write("f b\ni a\nf c\np a\np b\np c");
+		writer.close();
+		
+		writer = new PrintWriter(assignCostIdOnlyFileName, "UTF-8");
+		writer.write("f b\ni a\ni c\ni d\na = 5\nb = 5.5\nc = b");
 		writer.close();
 		
 		writer = new PrintWriter(dummyFileName, "UTF-8");
 		writer.write("f f\ni f\nb = a + ");
 		writer.close();
 	}
-	
-	@Test
-	public void testParseOk() throws IOException, SyntacticException
-	{
-		Parser p = new Parser(new Scanner(inputFileName));
-		NodeProgram np;
-		
-		//file di input con un programma sintatticamente corretto
-		try
-		{
-			np = p.parse();
-			
-			assertEquals("Dcls:\n[Type = FLOAT, id = b, Type = INT, id = a]\nStms:\n[]", np.toString());
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-			e.printStackTrace(System.out);
-			fail();
-		}
-	}
-	
 	
 	@Test
 	public void testParseNo() throws IOException, SyntacticException
@@ -73,4 +61,63 @@ public class testParser
 		}
 	}
 	
+	@Test
+	public void testParseDcls() throws IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(dclsOnlyFileName));
+		NodeProgram np;
+		
+		try
+		{
+			np = p.parse();
+			
+			assertEquals("Dcls:\n[b: FLOAT, a: INT]\nStms:\n[]", np.toString());
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace(System.out);
+			fail();
+		}
+	}
+	
+	@Test
+	public void testParseDclsPrints() throws FileNotFoundException, IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(dclsPrintsOnlyFileName));
+		NodeProgram np;
+		
+		try
+		{
+			np = p.parse();
+			
+			assertEquals("Dcls:\n[b: FLOAT, a: INT, c: FLOAT]\nStms:\n[(print) a, (print) b, (print) c]", np.toString());
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace(System.out);
+			fail();
+		}
+	}
+	
+	@Test
+	public void testParseAssignsCostId() throws FileNotFoundException, IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(assignCostIdOnlyFileName));
+		NodeProgram np;
+		
+		try
+		{
+			np = p.parse();
+			
+			assertEquals("Dcls:\n[b: FLOAT, a: INT, c: INT, d: INT]\nStms:\n[a = 5, b = 5.5, c = b]", np.toString());
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace(System.out);
+			fail();
+		}
+	}	
 }

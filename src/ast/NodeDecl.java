@@ -2,10 +2,10 @@ package ast;
 
 public class NodeDecl extends NodeAST
 {
-	private String id;
+	private NodeId id;
 	private LangType type;
 	
-	public NodeDecl(String id, LangType type)
+	public NodeDecl(NodeId id, LangType type)
 	{
 		this.id = id;
 		this.type = type;
@@ -13,12 +13,7 @@ public class NodeDecl extends NodeAST
 	
 	public String getId()
 	{
-		return id;
-	}
-	
-	public void setId(String newId)
-	{
-		this.id = newId;
+		return id.toString();
 	}
 	
 	public LangType getType()
@@ -34,6 +29,6 @@ public class NodeDecl extends NodeAST
 	@Override
 	public String toString()
 	{
-		return "Type = " +type+ ", id = "+id;
+		return id.toString()+": "+type;
 	}
 }

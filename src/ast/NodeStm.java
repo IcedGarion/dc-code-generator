@@ -1,6 +1,3 @@
 package ast;
 
-public abstract class NodeStm extends NodeAST
-{
-	
-}
+public abstract class NodeStm extends NodeAST {}
