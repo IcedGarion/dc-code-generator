@@ -183,10 +183,8 @@ public class Parser
 				id = currentToken.getValue();
 				match(TokenType.ASSIGN);
 				NodeExpr val = parseVal();
-				NodeExpr expr = parseExpr(val); //dovrebbe avere come parametro parseVal, così calcola tutta l'espressione (e se parseExpr è null, torna Val) sintetizzata in expr
-				//bisogna far ritornare, in parseVal, un nodo per un assegnamento solo di un ID: però poi parseVal finisce in parseExpr
+				NodeExpr expr = parseExpr(val);
 				ret = new NodeAssign(new NodeId(id), expr);
-				
 				break;
 			}
 			case PRINT:
