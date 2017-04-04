@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.AbsVisitor;
+
 public class NodeCost extends NodeExpr
 {
 	private String value;
@@ -12,5 +14,10 @@ public class NodeCost extends NodeExpr
 	public String toString()
 	{
 		return value;
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.AbsVisitor;
+
 public class NodeConv extends NodeExpr
 {
 	private NodeExpr expr;
@@ -12,5 +14,10 @@ public class NodeConv extends NodeExpr
 	public String toString()
 	{
 		return expr.toString();
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.AbsVisitor;
+
 public class NodeBinOp extends NodeExpr
 {
 	private LangOper operation;
@@ -16,5 +18,10 @@ public class NodeBinOp extends NodeExpr
 	public String toString()
 	{
 		return left.toString() + " " + operation + " " + right.toString();
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }

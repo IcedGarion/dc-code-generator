@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import visitor.AbsVisitor;
 
 public class NodeProgram extends NodeAST
 {
@@ -16,5 +17,10 @@ public class NodeProgram extends NodeAST
 	public String toString()
 	{
 		return "Dcls:\n" + Dcls.toString() + "\nStms:\n" + Stms.toString();
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.AbsVisitor;
+
 public class NodeDecl extends NodeAST
 {
 	private NodeId id;
@@ -30,5 +32,10 @@ public class NodeDecl extends NodeAST
 	public String toString()
 	{
 		return id.toString()+": "+type;
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }

@@ -1,9 +1,10 @@
 package ast;
 
+import visitor.AbsVisitor;
+
 public class NodeDeref extends NodeExpr
 {
 	private NodeId id;
-	private LangType type;
 	
 	public NodeDeref(NodeId i)
 	{
@@ -13,5 +14,10 @@ public class NodeDeref extends NodeExpr
 	public String toString()
 	{
 		return id.toString();
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.AbsVisitor;
+
 public class NodeAssign extends NodeStm
 {
 	private NodeId id;
@@ -14,5 +16,10 @@ public class NodeAssign extends NodeStm
 	public String toString()
 	{
 		return id.toString()+" = "+expr.toString();
+	}
+	
+	public void accept(AbsVisitor visitor)
+	{
+		visitor.visit(this);
 	}
 }
