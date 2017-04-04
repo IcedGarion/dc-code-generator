@@ -257,14 +257,14 @@ public class Parser
 			{
 				//Val->inum
 				match(TokenType.INUM);
-				ret = new NodeCost(currentToken.getValue(), LangType.INT);
+				ret = new NodeCost(currentToken.getValue());
 				break;
 			}
 			case FNUM:
 			{
 				//Val->fnum
 				match(TokenType.FNUM);
-				ret = new NodeCost(currentToken.getValue(), LangType.FLOAT);
+				ret = new NodeCost(currentToken.getValue());
 				break;
 			}
 			case ID:

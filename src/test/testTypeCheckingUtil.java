@@ -12,22 +12,24 @@ import ast.NodeExpr;
 import typecheck.TypeCheckingUtil;
 import typecheck.TypeException;
 
-public class testTypeCheck
+public class testTypeCheckingUtil
 {
 	@Test
 	public void testConvert() throws TypeException
 	{
-		NodeExpr expri = new NodeCost("10", LangType.INT);
-		NodeExpr exprf = new NodeCost("10", LangType.INT);
+		NodeExpr expri = new NodeCost("10");
+		NodeExpr exprf = new NodeCost("10");
+		expri.setType(LangType.INT);
+		exprf.setType(LangType.FLOAT);
 		
 		assertEquals(new NodeConv(expri).getClass(), (TypeCheckingUtil.convert(expri, LangType.FLOAT).getClass()));
 		assertEquals(expri, (TypeCheckingUtil.convert(expri, LangType.INT)));
 		
-		assertEquals(exprf, (TypeCheckingUtil.convert(expri, LangType.FLOAT)));
+		assertEquals(exprf, (TypeCheckingUtil.convert(exprf, LangType.FLOAT)));
 		
 		try
 		{
-			assertEquals(exprf, (TypeCheckingUtil.convert(expri, LangType.INT)));
+			TypeCheckingUtil.convert(exprf, LangType.INT);
 		}
 		catch(TypeException e)
 		{

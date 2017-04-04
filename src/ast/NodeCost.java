@@ -4,10 +4,9 @@ public class NodeCost extends NodeExpr
 {
 	private String value;
 	
-	public NodeCost(String value, LangType type)
+	public NodeCost(String value)
 	{
 		this.value = value;
-		super.setType(type);
 	}
 	
 	public String toString()

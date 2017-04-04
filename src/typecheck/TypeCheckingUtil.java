@@ -21,18 +21,10 @@ public class TypeCheckingUtil
 	public static NodeExpr[] consistent(NodeExpr e0, NodeExpr e1) throws TypeException
 	{
 		NodeExpr[] ret = new NodeExpr[2];
+		LangType type = generalize(e0.getType(), e1.getType());
 		
-		//setta nuovo tipo in nodeExpr
-		if(e0.getType() != e1.getType())
-		{
-			if(e0.getType() == LangType.INT)
-				e0.setType(LangType.FLOAT);
-			else
-				e1.setType(LangType.FLOAT);
-		}	
-		
-		ret[0] = e0;
-		ret[1] = e1;
+		ret[0] = convert(e0, type);
+		ret[1] = convert(e1, type);
 		
 		return ret;
 	}
