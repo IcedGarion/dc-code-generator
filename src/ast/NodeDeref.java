@@ -3,6 +3,7 @@ package ast;
 public class NodeDeref extends NodeExpr
 {
 	private NodeId id;
+	private LangType type;
 	
 	public NodeDeref(NodeId i)
 	{
