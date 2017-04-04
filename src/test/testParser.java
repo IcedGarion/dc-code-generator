@@ -19,6 +19,7 @@ public class testParser
 	private String dclsPrintsOnlyFileName = "./resources/dclsPrintsParse";
 	private String dummyFileName = "./resources/dummyParse";
 	private String assignCostIdOnlyFileName = "./resources/assignCostParse";
+	private String ExprFileName = "./resources/exprParse";
 	
 	@Before
 	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
@@ -36,6 +37,10 @@ public class testParser
 		
 		writer = new PrintWriter(assignCostIdOnlyFileName, "UTF-8");
 		writer.write("f b\ni a\ni c\ni d\na = 5\nb = 5.5\nc = b");
+		writer.close();
+		
+		writer = new PrintWriter(ExprFileName, "UTF-8");
+		writer.write("f a\ni b\nb = a + 2\na = 1 - 2");
 		writer.close();
 		
 		writer = new PrintWriter(dummyFileName, "UTF-8");
@@ -119,5 +124,25 @@ public class testParser
 			e.printStackTrace(System.out);
 			fail();
 		}
-	}	
+	}
+	
+	@Test
+	public void testParseExpr() throws FileNotFoundException, IOException, SyntacticException
+	{
+		Parser p = new Parser(new Scanner(ExprFileName));
+		NodeProgram np;
+		
+		try
+		{
+			np = p.parse();
+			
+			assertEquals("Dcls:\n[a: FLOAT, b: INT]\nStms:\n[b = a PLUS 2, a = 1 MINUS 2]", np.toString());
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace(System.out);
+			fail();
+		}
+	}
 }

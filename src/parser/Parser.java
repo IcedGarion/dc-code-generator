@@ -3,9 +3,12 @@ package parser;
 import java.io.IOException;
 
 import java.util.ArrayList;
+
+import ast.LangOper;
 import ast.LangType;
 import ast.NodeAST;
 import ast.NodeAssign;
+import ast.NodeBinOp;
 import ast.NodeCost;
 import ast.NodeDecl;
 import ast.NodeDeref;
@@ -206,6 +209,7 @@ public class Parser
 	{
 		Token nxt = scanner.peekToken();
 		NodeExpr ret = null;
+		NodeExpr right, left;
 		
 		switch(nxt.getType())
 		{
@@ -213,16 +217,18 @@ public class Parser
 			{
 				//Expr->plus Val Expr
 				match(TokenType.PLUS);
-				parseVal();
-				parseExpr(val);					//temporaneo: sicuramente da cambiare
-				break;							//tanto non viene toccato dai test
+				left = parseVal();
+				right = parseExpr(left);
+				ret = new NodeBinOp(LangOper.PLUS, val, right);
+				break;
 			}
 			case MINUS:
 			{
 				//Expr->minus Val Expr
 				match(TokenType.MINUS);
-				parseVal();
-				parseExpr(val);					//sicuramente da cambiare
+				left = parseVal();
+				right = parseExpr(left);
+				ret = new NodeBinOp(LangOper.MINUS, val, right);
 				break;				
 			}
 			case ID:
