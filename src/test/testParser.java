@@ -7,11 +7,12 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import org.junit.Before;
 import org.junit.Test;
-
+import ast.LangType;
 import ast.NodeProgram;
 import parser.Parser;
 import parser.SyntacticException;
 import scanner.Scanner;
+import symTable.SymTable;
 
 public class testParser
 {
@@ -19,7 +20,9 @@ public class testParser
 	private String dclsPrintsOnlyFileName = "./resources/dclsPrintsParse";
 	private String dummyFileName = "./resources/dummyParse";
 	private String assignCostIdOnlyFileName = "./resources/assignCostParse";
-	private String ExprFileName = "./resources/exprParse";
+	private String exprFileName = "./resources/exprParse";
+	private String symTabFileName = "./resources/symParse";
+	private String symTabMoreFileName = "./resources/symMoreParse";
 	
 	@Before
 	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
@@ -39,12 +42,20 @@ public class testParser
 		writer.write("f b\ni a\ni c\ni d\na = 5\nb = 5.5\nc = b");
 		writer.close();
 		
-		writer = new PrintWriter(ExprFileName, "UTF-8");
+		writer = new PrintWriter(exprFileName, "UTF-8");
 		writer.write("f a\ni b\nb = a + 2\na = 1 - 2");
 		writer.close();
 		
 		writer = new PrintWriter(dummyFileName, "UTF-8");
 		writer.write("f f\ni f\nb = a + ");
+		writer.close();
+		
+		writer = new PrintWriter(symTabFileName, "UTF-8");
+		writer.write("f a\ni b\nf c\nb = a + 2\na = 1 - 2");
+		writer.close();
+		
+		writer = new PrintWriter(symTabMoreFileName, "UTF-8");
+		writer.write("f a\ni a\n");
 		writer.close();
 	}
 	
@@ -129,7 +140,7 @@ public class testParser
 	@Test
 	public void testParseExpr() throws FileNotFoundException, IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(ExprFileName));
+		Parser p = new Parser(new Scanner(exprFileName));
 		NodeProgram np;
 		
 		try
@@ -143,6 +154,33 @@ public class testParser
 			System.out.println(e.getMessage());
 			e.printStackTrace(System.out);
 			fail();
+		}
+	}
+	
+	@Test
+	public void testSimpleSymTab() throws Exception
+	{
+		Parser p = new Parser(new Scanner(symTabFileName));
+		
+		p.parse();
+		
+		assertEquals(LangType.FLOAT, SymTable.lookup("a").getType());
+		assertEquals(LangType.INT, SymTable.lookup("b").getType());
+		assertEquals(LangType.FLOAT, SymTable.lookup("c").getType());
+	}
+	
+	@Test
+	public void testSymTabMore() throws Exception
+	{
+		Parser p = new Parser(new Scanner(symTabMoreFileName));
+		
+		try
+		{
+			p.parse();
+		}
+		catch(SyntacticException e)
+		{
+			assertEquals(e.getMessage(), "Duplicate variable a");
 		}
 	}
 }

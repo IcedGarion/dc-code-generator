@@ -19,6 +19,7 @@ import ast.NodeProgram;
 import ast.NodeStm;
 import scanner.LexicalException;
 import scanner.Scanner;
+import symTable.STEntry;
 import symTable.SymTable;
 import token.Token;
 import token.TokenType;
@@ -122,16 +123,30 @@ public class Parser
 				//Dcl->floatdcl id
 				match(TokenType.FLOATDCL);
 				match(TokenType.ID);
-				ret = new NodeDecl(new NodeId(currentToken.getValue()), LangType.FLOAT);		
-				break;
+				
+				if(SymTable.lookup(currentToken.getValue()) == null)
+				{
+					ret = new NodeDecl(new NodeId(currentToken.getValue()), LangType.FLOAT);
+					SymTable.enter(currentToken.getValue(), new STEntry(LangType.FLOAT));
+					break;
+				}
+				else
+					throw new SyntacticException("Duplicate variable " + currentToken.getValue());
 			}
 			case INTDCL:
 			{
 				//dcl->intdcl id
 				match(TokenType.INTDCL);
 				match(TokenType.ID);
-				ret = new NodeDecl(new NodeId(currentToken.getValue()), LangType.INT);
-				break;
+				
+				if(SymTable.lookup(currentToken.getValue()) == null)
+				{
+					ret = new NodeDecl(new NodeId(currentToken.getValue()), LangType.INT);
+					SymTable.enter(currentToken.getValue(), new STEntry(LangType.INT));
+					break;
+				}
+				else
+					throw new SyntacticException("Duplicate variable " + currentToken.getValue());
 			}
 			default:
 				throw new SyntacticException();
