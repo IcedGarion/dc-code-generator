@@ -1,5 +1,6 @@
 package ast;
 
+import typecheck.TypeException;
 import visitor.AbsVisitor;
 
 public class NodeBinOp extends NodeExpr
@@ -20,8 +21,18 @@ public class NodeBinOp extends NodeExpr
 		return left.toString() + " " + operation + " " + right.toString();
 	}
 	
-	public void accept(AbsVisitor visitor)
+	public void accept(AbsVisitor visitor) throws TypeException
 	{
 		visitor.visit(this);
+	}
+	
+	public NodeExpr getLeft()
+	{
+		return left;
+	}
+	
+	public NodeExpr getRight()
+	{
+		return right;
 	}
 }

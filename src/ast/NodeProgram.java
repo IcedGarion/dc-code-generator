@@ -23,4 +23,14 @@ public class NodeProgram extends NodeAST
 	{
 		visitor.visit(this);
 	}
+	
+	public ArrayList<NodeDecl> getDecl()
+	{
+		return Dcls;
+	}
+	
+	public ArrayList<NodeStm> getStms()
+	{
+		return Stms;
+	}
 }

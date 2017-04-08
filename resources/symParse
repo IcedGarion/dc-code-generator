@@ -1,5 +1,3 @@
-f a
-i b
-f c
-b = a + 2
-a = 1 - 2
+i a
+f b
+a = b + 3.2 

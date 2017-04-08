@@ -1,5 +1,6 @@
 package ast;
 
+import typecheck.TypeException;
 import visitor.AbsVisitor;
 
 public class NodeAssign extends NodeStm
@@ -18,8 +19,18 @@ public class NodeAssign extends NodeStm
 		return id.toString()+" = "+expr.toString();
 	}
 	
-	public void accept(AbsVisitor visitor)
+	public void accept(AbsVisitor visitor) throws TypeException
 	{
 		visitor.visit(this);
+	}
+	
+	public NodeExpr getExpr()
+	{
+		return expr;
+	}
+	
+	public NodeId getId()
+	{
+		return id;
 	}
 }
