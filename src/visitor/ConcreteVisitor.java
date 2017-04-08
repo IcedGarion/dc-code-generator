@@ -23,11 +23,11 @@ public class ConcreteVisitor extends AbsVisitor
 		NodeExpr result[];
 		
 		result = TypeCheckingUtil.consistent(n.getLeft(), n.getRight());
-		if(result[0].equals(LangType.INT) && result[1].equals(LangType.INT))
+		if(result[0].getType().equals(LangType.INT))
 		{
 			n.setType(LangType.INT);
 		}
-		else if(result[0].equals(LangType.FLOAT) && result[1].equals(LangType.FLOAT))
+		else if(result[0].getType().equals(LangType.FLOAT))
 		{
 			n.setType(LangType.FLOAT);
 		}
@@ -38,6 +38,7 @@ public class ConcreteVisitor extends AbsVisitor
 	{
 		LangType exprType;
 		LangType idType;
+		NodeExpr tmp;
 		String exprName = n.getExpr().getClass().getSimpleName();
 		
 		//prima calcola il tipo dell'espressione (a seconda di che espressione è)
@@ -56,10 +57,11 @@ public class ConcreteVisitor extends AbsVisitor
 		
 		//poi controlla se 'id è dello stesso tipo dell'espressione
 		//(quindi accept sulle expr diventa inutile)
-		exprType = n.getExpr().getType();
+		tmp = n.getExpr();
+		exprType = tmp.getType();
 		idType = SymTable.lookup(n.getId().toString()).getType();
 		if(!exprType.equals(idType))
-			throw new TypeException("Type mismatch in " + n.toString() + ": cannot convert from " + idType + " to " + exprType);
+			throw new TypeException("Type mismatch in " + n.toString() + ": cannot convert from " + exprType + " to " + idType);
 	}
 	
 	//per gli altri nodi cosa bisogna fare?

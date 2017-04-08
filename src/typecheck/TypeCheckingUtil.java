@@ -23,6 +23,7 @@ public class TypeCheckingUtil
 		NodeExpr[] ret = new NodeExpr[2];
 		LangType type = generalize(e0.getType(), e1.getType());
 		
+		
 		ret[0] = convert(e0, type);
 		ret[1] = convert(e1, type);
 		

@@ -273,6 +273,7 @@ public class Parser
 				//Val->inum
 				match(TokenType.INUM);
 				ret = new NodeCost(currentToken.getValue());
+				ret.setType(LangType.INT);
 				break;
 			}
 			case FNUM:
@@ -280,6 +281,7 @@ public class Parser
 				//Val->fnum
 				match(TokenType.FNUM);
 				ret = new NodeCost(currentToken.getValue());
+				ret.setType(LangType.FLOAT);
 				break;
 			}
 			case ID:
@@ -287,6 +289,14 @@ public class Parser
 				//Val->id
 				match(TokenType.ID);
 				ret = new NodeDeref(new NodeId(currentToken.getValue()));
+				
+				if(SymTable.lookup(ret.toString()).getType() == LangType.INT)
+					ret.setType(LangType.INT);
+				else if(SymTable.lookup(ret.toString()).getType() == LangType.FLOAT)
+					ret.setType(LangType.FLOAT);
+				else
+					throw new Exception(ret.toString() + ": Variable not declared");
+				
 				break;
 			}
 			default:

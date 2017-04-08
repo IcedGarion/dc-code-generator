@@ -2,14 +2,12 @@ package test;
 
 import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import org.junit.Before;
 import org.junit.Test;
 import ast.NodeProgram;
 import parser.Parser;
-import parser.SyntacticException;
 import scanner.Scanner;
 import typecheck.TypeChecker;
 import typecheck.TypeException;
@@ -42,9 +40,7 @@ public class testTypeCheck
 		}
 		catch(TypeException e)
 		{
-			e.printStackTrace();
-			assertEquals("Type mismatch in a = b + 3.2: cannot convert from FLOAT to INT", e.getMessage());
+			assertEquals("Type mismatch in a = b PLUS 3.2: cannot convert from FLOAT to INT", e.getMessage());
 		}
 	}
-
 }
