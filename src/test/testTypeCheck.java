@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.Assert.*;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -9,7 +10,7 @@ import org.junit.Test;
 import ast.NodeProgram;
 import parser.Parser;
 import scanner.Scanner;
-import typecheck.TypeChecker;
+import visitor.TypeChecker;
 import typecheck.TypeException;
 
 public class testTypeCheck
@@ -31,12 +32,13 @@ public class testTypeCheck
 	{
 		Parser p = new Parser(new Scanner(excFileName));
 		NodeProgram np;
+		TypeChecker visitor = new TypeChecker();
 		
 		np = p.parse();
 		
 		try
 		{
-			TypeChecker.check(np);
+			np.accept(visitor);
 		}
 		catch(TypeException e)
 		{

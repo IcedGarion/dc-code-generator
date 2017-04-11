@@ -1,6 +1,8 @@
 package ast;
 
 import java.util.ArrayList;
+
+import typecheck.TypeException;
 import visitor.AbsVisitor;
 
 public class NodeProgram extends NodeAST
@@ -19,7 +21,7 @@ public class NodeProgram extends NodeAST
 		return "Dcls:\n" + Dcls.toString() + "\nStms:\n" + Stms.toString();
 	}
 	
-	public void accept(AbsVisitor visitor)
+	public void accept(AbsVisitor visitor) throws TypeException
 	{
 		visitor.visit(this);
 	}

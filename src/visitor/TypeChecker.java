@@ -11,12 +11,22 @@ import ast.NodeExpr;
 import ast.NodeId;
 import ast.NodePrint;
 import ast.NodeProgram;
+import ast.NodeStm;
 import symTable.SymTable;
 import typecheck.TypeCheckingUtil;
 import typecheck.TypeException;
 
-public class ConcreteVisitor extends AbsVisitor
+public class TypeChecker extends AbsVisitor
 {
+	@Override
+	public void visit(NodeProgram np) throws TypeException
+	{
+		for (NodeDecl d : np.getDecl())
+			d.accept(this);
+		for (NodeStm s : np.getStms())
+			s.accept(this);
+	}
+	
 	@Override
 	public void visit(NodeBinOp n) throws TypeException
 	{
@@ -65,12 +75,6 @@ public class ConcreteVisitor extends AbsVisitor
 	}
 	
 	//per gli altri nodi cosa bisogna fare?
-	@Override
-	public void visit(NodeProgram n)
-	{
-		
-	}
-
 	@Override
 	public void visit(NodeId n)
 	{

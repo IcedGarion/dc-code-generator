@@ -6,7 +6,7 @@ import typecheck.TypeException;
 public abstract class AbsVisitor
 {
 	
-	public abstract void visit(NodeProgram n);
+	public abstract void visit(NodeProgram n) throws TypeException;
 	
 	public abstract void visit(NodeId n);
 	
