@@ -48,26 +48,13 @@ public class TypeChecker extends AbsVisitor
 	{
 		LangType exprType;
 		LangType idType;
-		NodeExpr tmp;
-		String exprName = n.getExpr().getClass().getSimpleName();
+		NodeExpr tmp = n.getExpr();
 		
-		//prima calcola il tipo dell'espressione (a seconda di che espressione è)
-		switch(exprName)
-		{
-			case "NodeBinOp":
-				visit((NodeBinOp) n.getExpr());
-				break;
-			case "NodeCost":
-				visit((NodeCost) n.getExpr());
-				break;
-			case "NodeDeref":
-				visit((NodeDeref) n.getExpr());
-				break;
-		}
+		//prima calcola il tipo dell'espressione (a seconda di che expr è, chiama la accept giusta)
+		tmp.accept(this);
 		
 		//poi controlla se 'id è dello stesso tipo dell'espressione
 		//(quindi accept sulle expr diventa inutile)
-		tmp = (NodeExpr) n.getExpr();
 		exprType = tmp.getType();
 		idType = SymTable.lookup(n.getId().toString()).getType();
 		

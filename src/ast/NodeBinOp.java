@@ -16,14 +16,10 @@ public class NodeBinOp extends NodeExpr
 		this.right = right;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return left.toString() + " " + operation + " " + right.toString();
-	}
-	
-	public void accept(AbsVisitor visitor) throws TypeException
-	{
-		visitor.visit(this);
 	}
 	
 	public NodeExpr getLeft()
@@ -34,5 +30,11 @@ public class NodeBinOp extends NodeExpr
 	public NodeExpr getRight()
 	{
 		return right;
+	}
+	
+	@Override
+	public void accept(AbsVisitor visitor) throws TypeException
+	{
+		visitor.visit(this);
 	}
 }

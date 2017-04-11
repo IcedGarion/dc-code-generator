@@ -34,6 +34,7 @@ public class NodeDecl extends NodeAST
 		return id.toString()+": "+type;
 	}
 	
+	@Override
 	public void accept(AbsVisitor visitor)
 	{
 		visitor.visit(this);

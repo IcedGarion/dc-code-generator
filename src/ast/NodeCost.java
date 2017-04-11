@@ -16,6 +16,7 @@ public class NodeCost extends NodeExpr
 		return value;
 	}
 	
+	@Override
 	public void accept(AbsVisitor visitor)
 	{
 		visitor.visit(this);

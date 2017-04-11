@@ -16,15 +16,12 @@ public class NodeProgram extends NodeAST
 		this.Stms = s;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return "Dcls:\n" + Dcls.toString() + "\nStms:\n" + Stms.toString();
 	}
 	
-	public void accept(AbsVisitor visitor) throws TypeException
-	{
-		visitor.visit(this);
-	}
 	
 	public ArrayList<NodeDecl> getDecl()
 	{
@@ -34,5 +31,11 @@ public class NodeProgram extends NodeAST
 	public ArrayList<NodeStm> getStms()
 	{
 		return Stms;
+	}
+	
+	@Override
+	public void accept(AbsVisitor visitor) throws TypeException
+	{
+		visitor.visit(this);
 	}
 }
