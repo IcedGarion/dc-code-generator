@@ -6,7 +6,7 @@ import visitor.AbsVisitor;
 public class NodeAssign extends NodeStm
 {
 	private NodeId id;
-	private NodeExpr expr;
+	private NodeAST expr;
 	
 	public NodeAssign(NodeId i, NodeExpr e)
 	{
@@ -24,7 +24,7 @@ public class NodeAssign extends NodeStm
 		visitor.visit(this);
 	}
 	
-	public NodeExpr getExpr()
+	public NodeAST getExpr()
 	{
 		return expr;
 	}

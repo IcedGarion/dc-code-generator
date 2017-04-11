@@ -67,10 +67,12 @@ public class TypeChecker extends AbsVisitor
 		
 		//poi controlla se 'id è dello stesso tipo dell'espressione
 		//(quindi accept sulle expr diventa inutile)
-		tmp = n.getExpr();
+		tmp = (NodeExpr) n.getExpr();
 		exprType = tmp.getType();
 		idType = SymTable.lookup(n.getId().toString()).getType();
-		if(!exprType.equals(idType))
+		
+		//un float può contenere int, viceversa no
+		if(exprType.equals(LangType.FLOAT) && idType.equals(LangType.INT))
 			throw new TypeException("Type mismatch in " + n.toString() + ": cannot convert from " + exprType + " to " + idType);
 	}
 	
