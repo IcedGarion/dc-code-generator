@@ -6,3 +6,5 @@ COSE DA MIGLIORARE
     poi il codeGenerator, in visit(nodeDeref) può usare la symbolTable per controllare
 
 -fornire supporto alla linea di comando
+
+-migliorare la scrittura dell'output, magari con dei commenti? O comunque se fallisce, non lasciare il file pieno di spazzatura
