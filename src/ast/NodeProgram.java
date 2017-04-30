@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import typecheck.TypeException;
 import visitor.AbsVisitor;
+import visitor.VariableNotInizializedException;
 
 public class NodeProgram extends NodeAST
 {
@@ -36,7 +37,7 @@ public class NodeProgram extends NodeAST
 	}
 	
 	@Override
-	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException
+	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		visitor.visit(this);
 	}

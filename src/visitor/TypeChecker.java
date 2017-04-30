@@ -21,7 +21,7 @@ import typecheck.TypeException;
 public class TypeChecker extends AbsVisitor
 {
 	@Override
-	public void visit(NodeProgram np) throws TypeException, FileNotFoundException, UnsupportedEncodingException
+	public void visit(NodeProgram np) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		for (NodeDecl d : np.getDecl())
 			d.accept(this);
@@ -46,7 +46,7 @@ public class TypeChecker extends AbsVisitor
 	}
 	
 	@Override
-	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException
+	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		LangType exprType;
 		LangType idType;

@@ -3,6 +3,7 @@ package visitor;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Stack;
 import ast.LangOper;
 import ast.LangType;
@@ -23,15 +24,17 @@ public class CodeGenerator extends AbsVisitor
 	private final String outputFileName = "./resources/dcOut";
 	private PrintWriter writer;
 	private Stack<String> operators;
+	private ArrayList<String> inizialized;
 	
 	public CodeGenerator() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		writer = new PrintWriter(outputFileName, "UTF-8");	
 		operators = new Stack<String>();
+		inizialized = new ArrayList<String>();
 	}
 	
 	@Override
-	public void visit(NodeProgram n) throws FileNotFoundException, UnsupportedEncodingException, TypeException
+	public void visit(NodeProgram n) throws FileNotFoundException, UnsupportedEncodingException, TypeException, VariableNotInizializedException
 	{
 		for(NodeStm nd : n.getStms())
 			nd.accept(this);
@@ -61,13 +64,15 @@ public class CodeGenerator extends AbsVisitor
 	}
 
 	@Override
-	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException
+	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		String id;
 		
+		/*	questione precisione ancora da vedere
 		//inizia cambiando la precisione, se la parte dx è float
 		if(n.getExpr().getType().equals(LangType.FLOAT))
 			writer.write(" 5k");
+		*/
 		
 		//scompone in ID ed EXPR: ID sarà il nome del registro in cui salvare il risultato
 		id = n.getId().toString();
@@ -75,8 +80,11 @@ public class CodeGenerator extends AbsVisitor
 		//chiama accept(NodeExpr) come l'altro visitor;
 		n.getExpr().accept(this);
 		
-		//poi salva il risultato (in cima allo stack) in un registro "ID", pronto per la stampa
+		//poi salva il risultato (in cima allo stack) in un registro "ID", per riusarlo in altre operazioni o stamparlo
 		writer.write(" s" + id);
+		
+		//aggiorna la lista di variabili inizializzate
+		inizialized.add(id);
 	}
 
 	@Override
@@ -92,13 +100,18 @@ public class CodeGenerator extends AbsVisitor
 	}
 
 	@Override
-	public void visit(NodeDeref n)
+	public void visit(NodeDeref n) throws VariableNotInizializedException
 	{
-		writer.write(" " + n.toString());
+		//controlla se la variabile esiste (cioè se inizializzata): tiene una lista
+		if(! inizialized.contains(n.toString()))
+			throw new VariableNotInizializedException(n.toString());
+		
+		//carica il registro con nome = id
+		writer.write(" l" + n.toString());
 	}
 
 	@Override
-	public void visit(NodeBinOp n) throws TypeException, FileNotFoundException, UnsupportedEncodingException
+	public void visit(NodeBinOp n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		//visita tutta la expr e stampa trasformata
 		visitRic(n);
@@ -108,7 +121,7 @@ public class CodeGenerator extends AbsVisitor
 			writer.write(" " + operators.pop());
 	}
 	
-	private void visitRic(NodeBinOp n) throws FileNotFoundException, UnsupportedEncodingException, TypeException
+	private void visitRic(NodeBinOp n) throws FileNotFoundException, UnsupportedEncodingException, TypeException, VariableNotInizializedException
 	{
 		if(n.getOperation().equals(LangOper.MINUS))		//gestisce operatori
 		{
@@ -125,7 +138,7 @@ public class CodeGenerator extends AbsVisitor
 			operators.push("+");
 		}
 		
-		writer.write(" " + n.getLeft());			//poi aggiunge operatore destro
+		n.getLeft().accept(this);						//gestisce operatore sinistro (NodeConst o NodeDeref)
 		
 		if(n.getRight() instanceof NodeBinOp)			//poi se la parte destra è un'altra operazione,
 			visitRic((NodeBinOp) n.getRight());			//chiama in ricorsione;

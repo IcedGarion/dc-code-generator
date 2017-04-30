@@ -1,6 +1,7 @@
 package ast;
 
 import visitor.AbsVisitor;
+import visitor.VariableNotInizializedException;
 
 public class NodeDeref extends NodeExpr
 {
@@ -17,7 +18,7 @@ public class NodeDeref extends NodeExpr
 	}
 	
 	@Override
-	public void accept(AbsVisitor visitor)
+	public void accept(AbsVisitor visitor) throws VariableNotInizializedException
 	{
 		visitor.visit(this);
 	}

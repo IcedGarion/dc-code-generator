@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import typecheck.TypeException;
 import visitor.AbsVisitor;
+import visitor.VariableNotInizializedException;
 
 public class NodeAssign extends NodeStm
 {
@@ -21,7 +22,7 @@ public class NodeAssign extends NodeStm
 		return id.toString()+" = "+expr.toString();
 	}
 	
-	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException
+	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		visitor.visit(this);
 	}
