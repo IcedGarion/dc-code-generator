@@ -21,4 +21,9 @@ public class NodePrint extends NodeStm
 	{
 		visitor.visit(this);
 	}
+	
+	public String getId()
+	{
+		return id.toString();
+	}
 }

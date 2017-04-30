@@ -1,5 +1,7 @@
 package ast;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import typecheck.TypeException;
 import visitor.AbsVisitor;
 
@@ -32,8 +34,13 @@ public class NodeBinOp extends NodeExpr
 		return right;
 	}
 	
+	public LangOper getOperation()
+	{
+		return operation;
+	}
+	
 	@Override
-	public void accept(AbsVisitor visitor) throws TypeException
+	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException
 	{
 		visitor.visit(this);
 	}

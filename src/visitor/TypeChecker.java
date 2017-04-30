@@ -1,5 +1,7 @@
 package visitor;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import ast.LangType;
 import ast.NodeAssign;
 import ast.NodeBinOp;
@@ -19,7 +21,7 @@ import typecheck.TypeException;
 public class TypeChecker extends AbsVisitor
 {
 	@Override
-	public void visit(NodeProgram np) throws TypeException
+	public void visit(NodeProgram np) throws TypeException, FileNotFoundException, UnsupportedEncodingException
 	{
 		for (NodeDecl d : np.getDecl())
 			d.accept(this);
@@ -44,7 +46,7 @@ public class TypeChecker extends AbsVisitor
 	}
 	
 	@Override
-	public void visit(NodeAssign n) throws TypeException
+	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException
 	{
 		LangType exprType;
 		LangType idType;

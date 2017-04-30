@@ -21,6 +21,7 @@ public class testTypeCheck
 	private String excFileName3 = "./resources/typeCheck4";
 	private String testFileName2 = "./resources/typeCheck6";
 	private String testFileName3 = "./resources/typeCheck7";
+	private String testFileName4 = "./resources/typeCheck8";
 	
 	@Before
 	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
@@ -49,6 +50,10 @@ public class testTypeCheck
 		
 		writer = new PrintWriter(testFileName3, "UTF-8");
 		writer.write("i a\nf b\nb = a + 3");
+		writer.close();
+		
+		writer = new PrintWriter(testFileName4, "UTF-8");
+		writer.write("i a\na = 1 + 3.2");
 		writer.close();
 	}
 	
@@ -152,6 +157,25 @@ public class testTypeCheck
 	
 	@Test
 	public void testOk3() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName3));
+		NodeProgram np;
+		TypeChecker visitor = new TypeChecker();
+		
+		np = p.parse();
+		
+		try
+		{
+			np.accept(visitor);
+		}
+		catch(Exception e)
+		{
+			fail("No exception expected");
+		}
+	}
+	
+	@Test
+	public void testOk4() throws Exception
 	{
 		Parser p = new Parser(new Scanner(testFileName3));
 		NodeProgram np;

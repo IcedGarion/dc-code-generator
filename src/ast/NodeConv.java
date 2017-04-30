@@ -9,6 +9,7 @@ public class NodeConv extends NodeExpr
 	public NodeConv(NodeExpr expr)
 	{
 		this.expr = expr;
+		setType(LangType.FLOAT);
 	}
 	
 	public String toString()

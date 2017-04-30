@@ -1,5 +1,7 @@
 package ast;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import typecheck.TypeException;
@@ -34,7 +36,7 @@ public class NodeProgram extends NodeAST
 	}
 	
 	@Override
-	public void accept(AbsVisitor visitor) throws TypeException
+	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException
 	{
 		visitor.visit(this);
 	}
