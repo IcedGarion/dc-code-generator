@@ -127,7 +127,7 @@ public class Parser
 				if(SymTable.lookup(currentToken.getValue()) == null)
 				{
 					ret = new NodeDecl(new NodeId(currentToken.getValue()), LangType.FLOAT);
-					SymTable.enter(currentToken.getValue(), new STEntry(LangType.FLOAT));
+					SymTable.enter(currentToken.getValue(), new STEntry(LangType.FLOAT, false));
 					break;
 				}
 				else
@@ -142,7 +142,7 @@ public class Parser
 				if(SymTable.lookup(currentToken.getValue()) == null)
 				{
 					ret = new NodeDecl(new NodeId(currentToken.getValue()), LangType.INT);
-					SymTable.enter(currentToken.getValue(), new STEntry(LangType.INT));
+					SymTable.enter(currentToken.getValue(), new STEntry(LangType.INT, false));
 					break;
 				}
 				else

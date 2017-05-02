@@ -1,10 +1,7 @@
 COSE DA MIGLIORARE
--in codeGenerator, usare la symbol table per tenere traccia di variabili già inizializzate:
-    aggiungere un attributo alla symbolTable;
-    nel parser, in parseDcl aggiungere alla symbolTable la nuova entry, con campo "inizializzata" a false
-    in parseVal, quando c'è il nodeDeref e si aggiorna il campo Type nella symbolTable, aggiornare anche "inizializzata" a true
-    poi il codeGenerator, in visit(nodeDeref) può usare la symbolTable per controllare
 
 -fornire supporto alla linea di comando
 
 -migliorare la scrittura dell'output, magari con dei commenti? O comunque se fallisce, non lasciare il file pieno di spazzatura
+
+-i vari testCodeGenerator cancellano il file dcOut a ogni lettura

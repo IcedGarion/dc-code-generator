@@ -25,6 +25,11 @@ public class SymTable
 		return true;
 	}
 
+	public static boolean replace(String id, STEntry oldValue, STEntry newValue)
+	{
+		return table.replace(id, oldValue, newValue);
+	}
+	
 	public static STEntry lookup(String id)
 	{
 		return table.get(id);

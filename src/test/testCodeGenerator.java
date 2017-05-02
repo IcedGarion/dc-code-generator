@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import org.junit.Before;
@@ -96,6 +95,7 @@ public class testCodeGenerator
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			fail("No exception expected");
 		}
 		

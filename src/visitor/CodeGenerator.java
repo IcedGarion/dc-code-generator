@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Stack;
 import ast.LangOper;
-import ast.LangType;
 import ast.NodeAssign;
 import ast.NodeBinOp;
 import ast.NodeConv;
@@ -17,6 +16,8 @@ import ast.NodeId;
 import ast.NodePrint;
 import ast.NodeProgram;
 import ast.NodeStm;
+import symTable.STEntry;
+import symTable.SymTable;
 import typecheck.TypeException;
 
 public class CodeGenerator extends AbsVisitor
@@ -24,13 +25,11 @@ public class CodeGenerator extends AbsVisitor
 	private final String outputFileName = "./resources/dcOut";
 	private PrintWriter writer;
 	private Stack<String> operators;
-	private ArrayList<String> inizialized;
 	
 	public CodeGenerator() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		writer = new PrintWriter(outputFileName, "UTF-8");	
 		operators = new Stack<String>();
-		inizialized = new ArrayList<String>();
 	}
 	
 	@Override
@@ -67,6 +66,7 @@ public class CodeGenerator extends AbsVisitor
 	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		String id;
+		STEntry old, updated;
 		
 		/*	questione precisione ancora da vedere
 		//inizia cambiando la precisione, se la parte dx è float
@@ -83,8 +83,10 @@ public class CodeGenerator extends AbsVisitor
 		//poi salva il risultato (in cima allo stack) in un registro "ID", per riusarlo in altre operazioni o stamparlo
 		writer.write(" s" + id);
 		
-		//aggiorna la lista di variabili inizializzate
-		inizialized.add(id);
+		//aggiorna la entry della symbolTable mettendo true il campo "inizializzata"
+		old = SymTable.lookup(id);
+		updated = new STEntry(old.getType(), true);
+		SymTable.replace(id, old, updated);
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class CodeGenerator extends AbsVisitor
 	public void visit(NodeDeref n) throws VariableNotInizializedException
 	{
 		//controlla se la variabile esiste (cioè se inizializzata): tiene una lista
-		if(! inizialized.contains(n.toString()))
+		if(! SymTable.lookup(n.toString()).isInitialized())
 			throw new VariableNotInizializedException(n.toString());
 		
 		//carica il registro con nome = id
