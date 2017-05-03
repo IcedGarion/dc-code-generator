@@ -2,10 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import org.junit.Before;
 import org.junit.Test;
 import ast.NodeProgram;
 import parser.Parser;
@@ -15,58 +12,18 @@ import typecheck.TypeException;
 
 public class testTypeCheck
 {
-	private String excFileName = "./resources/typeCheck";
-	private String testFileName = "./resources/typeCheck2";
-	private String excFileName2 = "./resources/typeCheck3";
-	private String excFileName3 = "./resources/typeCheck4";
-	private String testFileName2 = "./resources/typeCheck6";
-	private String testFileName3 = "./resources/typeCheck7";
-	private String testFileName4 = "./resources/typeCheck8";
-	private String testFileName5 = "./resources/typeCheck9";
-
-	
-	@Before
-	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
-	{
-		PrintWriter writer;
-		
-		writer = new PrintWriter(excFileName, "UTF-8");
-		writer.write("i a\nf b\na = b + 3.2 ");
-		writer.close();
-		
-		writer = new PrintWriter(excFileName2, "UTF-8");
-		writer.write("i a\nf b\na = b");
-		writer.close();
-		
-		writer = new PrintWriter(excFileName3, "UTF-8");
-		writer.write("i a\na = 3.2");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName, "UTF-8");
-		writer.write("i a\nf b\nb = a + 2\na = 1 - 2");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName2, "UTF-8");
-		writer.write("i a\ni b\na = b + 3");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName3, "UTF-8");
-		writer.write("i a\nf b\nb = a + 3");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName4, "UTF-8");
-		writer.write("i a\na = 1 + 3.2");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName5, "UTF-8");
-		writer.write("i a\nf b\nf c\na = 1\nb = a + 3\nc = b + a - 3.2\n");
-		writer.close();
-	}
+	private String fileName = "./resources/testTypeCheck";
 	
 	@Test
 	public void testExc1() throws Exception
 	{
-		Parser p = new Parser(new Scanner(excFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\na = b + 3.2 ");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -86,7 +43,13 @@ public class testTypeCheck
 	@Test
 	public void testExc2() throws Exception
 	{
-		Parser p = new Parser(new Scanner(excFileName2));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\na = b");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -106,7 +69,13 @@ public class testTypeCheck
 	@Test
 	public void testExc3() throws Exception
 	{
-		Parser p = new Parser(new Scanner(excFileName3));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\na = 3.2");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -126,7 +95,13 @@ public class testTypeCheck
 	@Test
 	public void testOk() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nb = a + 2\na = 1 - 2");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -145,7 +120,13 @@ public class testTypeCheck
 	@Test
 	public void testOk2() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName2));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\ni b\na = b + 3");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -164,7 +145,13 @@ public class testTypeCheck
 	@Test
 	public void testOk3() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName3));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nb = a + 3");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -183,7 +170,13 @@ public class testTypeCheck
 	@Test
 	public void testOk4() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName3));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nb = a + 3");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -202,7 +195,13 @@ public class testTypeCheck
 	@Test
 	public void testExc4() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName4));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\na = 1 + 3.2");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		
@@ -222,7 +221,13 @@ public class testTypeCheck
 	@Test
 	public void testMoreExprs() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName5));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nf c\na = 1\nb = a + 3\nc = b + a - 3.2\n");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor = new TypeChecker();
 		

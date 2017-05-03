@@ -18,49 +18,8 @@ import visitor.VariableNotInizializedException;
 public class testCodeGenerator
 {
 	private String dcOut = "./resources/dcOut";
-	private String testFileName1 = "./resources/codeGenerator1";
-	private String testFileName2 = "./resources/codeGenerator2";
-	private String testFileName3 = "./resources/codeGenerator3";
-	private String testFileName4 = "./resources/codeGenerator4";
-	private String testFileName5 = "./resources/codeGenerator5";
-	private String testFileName6 = "./resources/codeGenerator6";
-	private String testFileName7 = "./resources/codeGenerator7";
+	private String fileName = "./resources/testCodeGenerator";
 	private BufferedReader reader;
-	
-	
-	@Before
-	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
-	{
-		PrintWriter writer;
-		
-		writer = new PrintWriter(testFileName1, "UTF-8");
-		writer.write("f a\na = 1 + 3.2\np a");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName2, "UTF-8");
-		writer.write("f a\nf b\nb = 1\na = b + 3.2\np a ");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName3, "UTF-8");
-		writer.write("f a\nf b\na = b + 3.2\np a ");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName4, "UTF-8");
-		writer.write("i a\nf b\nf c\nf e\na = 1\nb = a + 3\nc = b + a - 3.2\ne = a + b - c - c - c - c - c\np e");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName5, "UTF-8");
-		writer.write("i a\nf b\nf c\na = 1\nb = a + a + a + 3\np b");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName6, "UTF-8");
-		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - 3\nc = b + a - 3.2\ne = a + b - c + c\np e");
-		writer.close();
-		
-		writer = new PrintWriter(testFileName7, "UTF-8");
-		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - _3\nc = b + a - _3.2\ne = a + b - c + c\np e");
-		writer.close();
-	}
 	
 	private String readDoc() throws Exception
 	{
@@ -80,7 +39,13 @@ public class testCodeGenerator
 	@Test
 	public void testConst() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName1));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\na = 1 + 3.2\np a");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();
@@ -102,7 +67,13 @@ public class testCodeGenerator
 	@Test
 	public void testSimple() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName2));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\nf b\nb = 1\na = b + 3.2\np a ");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();
@@ -124,7 +95,13 @@ public class testCodeGenerator
 	@Test
 	public void testUninitialized() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName3));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\nf b\na = b + 3.2\np a ");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();
@@ -145,7 +122,13 @@ public class testCodeGenerator
 	@Test
 	public void testMoreId() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName5));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nf c\na = 1\nb = a + a + a + 3\np b");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();
@@ -168,7 +151,13 @@ public class testCodeGenerator
 	@Test
 	public void testMoreId2() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName4));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nf c\nf e\na = 1\nb = a + 3\nc = b + a - 3.2\ne = a + b - c - c - c - c - c\np e");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();
@@ -191,7 +180,13 @@ public class testCodeGenerator
 	@Test
 	public void testNeg1() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName6));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - 3\nc = b + a - 3.2\ne = a + b - c + c\np e");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();
@@ -214,7 +209,13 @@ public class testCodeGenerator
 	@Test
 	public void testNeg2() throws Exception
 	{
-		Parser p = new Parser(new Scanner(testFileName7));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - _3\nc = b + a - _3.2\ne = a + b - c + c\np e");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();

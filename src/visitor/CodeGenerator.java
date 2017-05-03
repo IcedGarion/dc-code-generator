@@ -1,12 +1,11 @@
 package visitor;
 
 import java.io.FileNotFoundException;
+
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Stack;
 import ast.LangOper;
-import ast.LangType;
 import ast.NodeAssign;
 import ast.NodeBinOp;
 import ast.NodeConv;

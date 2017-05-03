@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import org.junit.Before;
 import org.junit.Test;
 import ast.LangType;
 import ast.NodeProgram;
@@ -16,53 +14,18 @@ import symTable.SymTable;
 
 public class testParser
 {
-	private String dclsOnlyFileName = "./resources/dclsParse";
-	private String dclsPrintsOnlyFileName = "./resources/dclsPrintsParse";
-	private String dummyFileName = "./resources/dummyParse";
-	private String assignCostIdOnlyFileName = "./resources/assignCostParse";
-	private String exprFileName = "./resources/exprParse";
-	private String symTabFileName = "./resources/symParse";
-	private String symTabMoreFileName = "./resources/symMoreParse";
-	
-	@Before
-	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
-	{
-		//scrive file per i test
-		PrintWriter writer;
-
-		writer = new PrintWriter(dclsOnlyFileName, "UTF-8");
-		writer.write("f b\ni a\n");
-		writer.close();
-		
-		writer = new PrintWriter(dclsPrintsOnlyFileName, "UTF-8");
-		writer.write("f b\ni a\nf c\np a\np b\np c");
-		writer.close();
-		
-		writer = new PrintWriter(assignCostIdOnlyFileName, "UTF-8");
-		writer.write("f b\ni a\ni c\ni d\na = 5\nb = 5.5\nc = b");
-		writer.close();
-		
-		writer = new PrintWriter(exprFileName, "UTF-8");
-		writer.write("f a\ni b\nb = a + 2\na = 1 - 2");
-		writer.close();
-		
-		writer = new PrintWriter(dummyFileName, "UTF-8");
-		writer.write("f f\ni f\nb = a + ");
-		writer.close();
-		
-		writer = new PrintWriter(symTabFileName, "UTF-8");
-		writer.write("f a\ni b\nf c\nb = a + 2\na = 1 - 2");
-		writer.close();
-		
-		writer = new PrintWriter(symTabMoreFileName, "UTF-8");
-		writer.write("f a\ni a\n");
-		writer.close();
-	}
+	private String fileName = "./resources/testParser";
 	
 	@Test
 	public void testParseNo() throws IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(dummyFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f f\ni f\nb = a + ");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		
 		//programma sintatticamente non corretto
 		try
@@ -80,7 +43,13 @@ public class testParser
 	@Test
 	public void testParseDcls() throws IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(dclsOnlyFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f b\ni a\n");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		
 		try
@@ -100,7 +69,13 @@ public class testParser
 	@Test
 	public void testParseDclsPrints() throws FileNotFoundException, IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(dclsPrintsOnlyFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f b\ni a\nf c\np a\np b\np c");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		
 		try
@@ -120,7 +95,13 @@ public class testParser
 	@Test
 	public void testParseAssignsCostId() throws FileNotFoundException, IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(assignCostIdOnlyFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f b\ni a\ni c\ni d\na = 5\nb = 5.5\nc = b");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		
 		try
@@ -140,7 +121,13 @@ public class testParser
 	@Test
 	public void testParseExpr() throws FileNotFoundException, IOException, SyntacticException
 	{
-		Parser p = new Parser(new Scanner(exprFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\ni b\nb = a + 2\na = 1 - 2");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		NodeProgram np;
 		
 		try
@@ -160,7 +147,13 @@ public class testParser
 	@Test
 	public void testSimpleSymTab() throws Exception
 	{
-		Parser p = new Parser(new Scanner(symTabFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\ni b\nf c\nb = a + 2\na = 1 - 2");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		
 		p.parse();
 		
@@ -172,7 +165,13 @@ public class testParser
 	@Test
 	public void testSymTabMore() throws Exception
 	{
-		Parser p = new Parser(new Scanner(symTabMoreFileName));
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\ni a\n");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
 		
 		try
 		{

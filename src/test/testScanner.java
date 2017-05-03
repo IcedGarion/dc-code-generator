@@ -6,10 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-
-import org.junit.Before;
 import org.junit.Test;
-
 import scanner.LexicalException;
 import scanner.Scanner;
 
