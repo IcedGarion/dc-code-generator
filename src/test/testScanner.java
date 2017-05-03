@@ -15,47 +15,17 @@ import scanner.Scanner;
 
 public class testScanner
 {
-	private String fileName = "./resources/input";
-	private String fileName2 = "./resources/input2";
-	private String fileName3 = "./resources/input3";
-	private String fileName4 = "./resources/input4";
-	private String fileName5 = "./resources/input5";
-	private String dummyFileName = "./resources/dummy";
+	private String fileName = "./resources/testScanner";
 	
-	@Before
-	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
+	@Test
+	public void testException() throws FileNotFoundException, UnsupportedEncodingException
 	{
-		//scrive i due file per i test
 		PrintWriter writer;
 		
 		writer = new PrintWriter(fileName, "UTF-8");
 		writer.write("f b\ni a\na = 5\nb = a + 3.2\np b\n");
 		writer.close();
 		
-		writer = new PrintWriter(fileName2, "UTF-8");
-		writer.write("i a\na = _1\n");
-		writer.close();
-		
-		writer = new PrintWriter(fileName3, "UTF-8");
-		writer.write("i a\na = _");
-		writer.close();
-		
-		writer = new PrintWriter(fileName4, "UTF-8");
-		writer.write("i a\na = _\n");
-		writer.close();
-		
-		writer = new PrintWriter(fileName5, "UTF-8");
-		writer.write("f a\na = _1.1\n");
-		writer.close();
-		
-		writer = new PrintWriter(dummyFileName, "UTF-8");
-		writer.write(";\nà\n123g\n1.5x\nfb\ni aa\npa\n");
-		writer.close();
-	}
-	
-	@Test
-	public void testException()
-	{
 		try
 		{
 			new Scanner("wrongFile");
@@ -76,10 +46,14 @@ public class testScanner
 
 
 	@Test
-	public void test()
+	public void test() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		Scanner s;
+		PrintWriter writer;
 		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f b\ni a\na = 5\nb = a + 3.2\np b\n");
+		writer.close();
 		try
 		{
 			s = new Scanner(fileName);
@@ -111,8 +85,14 @@ public class testScanner
 	@Test
 	public void testTokenException() throws IOException
 	{
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write(";\nà\n123g\n1.5x\nfb\ni aa\npa\n");
+		writer.close();
+		
 		//prova tutte le possibili eccezioni in Scanner
-		Scanner s = new Scanner(dummyFileName);
+		Scanner s = new Scanner(fileName);
 		
 		//;
 		try
@@ -203,9 +183,14 @@ public class testScanner
 	 
 	 
 	@Test
-	public void testPeek()
+	public void testPeek() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		Scanner s;
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f b\nf b\n");
+		writer.close();
 		
 		try
 		{
@@ -223,13 +208,18 @@ public class testScanner
 	}
 	
 	@Test
-	public void testNeg1()
+	public void testNeg1() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		Scanner s;
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\na = _1\n");
+		writer.close();
 		
 		try
 		{
-			s = new Scanner(fileName2);
+			s = new Scanner(fileName);
 			
 			assertEquals("INTDCL", s.nextToken().toString());
 			assertEquals("ID,a", s.nextToken().toString());
@@ -245,13 +235,17 @@ public class testScanner
 	}
 	
 	@Test
-	public void testNeg3()
+	public void testNeg3() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		Scanner s;
+		PrintWriter writer;
 		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\na = _");
+		writer.close();
 		try
 		{
-			s = new Scanner(fileName3);
+			s = new Scanner(fileName);
 			
 			assertEquals("INTDCL", s.nextToken().toString());
 			assertEquals("ID,a", s.nextToken().toString());
@@ -267,13 +261,18 @@ public class testScanner
 	}
 	
 	@Test
-	public void testNeg2()
+	public void testNeg2() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		Scanner s;
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\na = _\n");
+		writer.close();
 		
 		try
 		{
-			s = new Scanner(fileName4);
+			s = new Scanner(fileName);
 			
 			assertEquals("INTDCL", s.nextToken().toString());
 			assertEquals("ID,a", s.nextToken().toString());
@@ -289,13 +288,17 @@ public class testScanner
 	}
 	
 	@Test
-	public void testNeg4()
+	public void testNeg4() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		Scanner s;
+		PrintWriter writer;
 		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("f a\na = _1.1\n");
+		writer.close();
 		try
 		{
-			s = new Scanner(fileName5);
+			s = new Scanner(fileName);
 			
 			assertEquals("FLOATDCL", s.nextToken().toString());
 			assertEquals("ID,a", s.nextToken().toString());
