@@ -1,6 +1,8 @@
 COSE DA MIGLIORARE
 
--salvare i valori delle variabili in SymbolTable e non nei registri?
+-salvare i valori delle variabili in SymbolTable e non nei registri? Così non serve il boolean "inizializzata"
+
+-svuotare lo stack dopo ogni assegnamento
 
 -fornire supporto alla linea di comando
 

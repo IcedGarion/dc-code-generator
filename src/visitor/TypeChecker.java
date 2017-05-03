@@ -30,9 +30,13 @@ public class TypeChecker extends AbsVisitor
 	}
 	
 	@Override
-	public void visit(NodeBinOp n) throws TypeException
+	public void visit(NodeBinOp n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
 	{
 		NodeExpr result[];
+		
+		//se è una operazione "composita", chiama in ricorsione sulla operazione binaria che segue
+		if(n.getRight() instanceof NodeBinOp)
+			n.getRight().accept(this);
 		
 		result = TypeCheckingUtil.consistent(n.getLeft(), n.getRight());
 		if(result[0].getType().equals(LangType.INT))

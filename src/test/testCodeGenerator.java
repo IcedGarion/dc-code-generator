@@ -61,7 +61,7 @@ public class testCodeGenerator
 		
 		return out;
 	}
-	
+	/*
 	@Test
 	public void test1() throws Exception
 	{
@@ -126,7 +126,7 @@ public class testCodeGenerator
 			assertEquals("b", e.getMessage());
 		}
 	}
-	
+	*/
 	@Test
 	public void testMoreExpr() throws Exception
 	{

@@ -22,6 +22,8 @@ public class testTypeCheck
 	private String testFileName2 = "./resources/typeCheck6";
 	private String testFileName3 = "./resources/typeCheck7";
 	private String testFileName4 = "./resources/typeCheck8";
+	private String testFileName5 = "./resources/typeCheck9";
+
 	
 	@Before
 	public void writeFile() throws FileNotFoundException, UnsupportedEncodingException
@@ -54,6 +56,10 @@ public class testTypeCheck
 		
 		writer = new PrintWriter(testFileName4, "UTF-8");
 		writer.write("i a\na = 1 + 3.2");
+		writer.close();
+		
+		writer = new PrintWriter(testFileName5, "UTF-8");
+		writer.write("i a\nf b\nf c\na = 1\nb = a + 3\nc = b + a - 3.2\n");
 		writer.close();
 	}
 	
@@ -189,6 +195,46 @@ public class testTypeCheck
 		}
 		catch(Exception e)
 		{
+			fail("No exception expected");
+		}
+	}
+	
+	@Test
+	public void testExc4() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName4));
+		NodeProgram np;
+		TypeChecker visitor = new TypeChecker();
+		
+		np = p.parse();
+		
+		try
+		{
+			np.accept(visitor);
+			fail("Exception expected");
+		}
+		catch(Exception e)
+		{
+			assertEquals("Type mismatch in a = 1 PLUS 3.2: cannot convert from FLOAT to INT", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testMoreExprs() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName5));
+		NodeProgram np;
+		TypeChecker visitor = new TypeChecker();
+		
+		np = p.parse();
+		
+		try
+		{
+			np.accept(visitor);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
 			fail("No exception expected");
 		}
 	}

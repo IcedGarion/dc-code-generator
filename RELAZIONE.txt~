@@ -1,5 +1,7 @@
 COSE DA MIGLIORARE
 
+-salvare i valori delle variabili in SymbolTable e non nei registri? Così non serve il boolean "inizializzata"
+
 -fornire supporto alla linea di comando
 
 -migliorare la scrittura dell'output, magari con dei commenti? O comunque se fallisce, non lasciare il file pieno di spazzatura
