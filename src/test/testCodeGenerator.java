@@ -21,6 +21,7 @@ public class testCodeGenerator
 	private String testFileName1 = "./resources/codeGenerator1";
 	private String testFileName2 = "./resources/codeGenerator2";
 	private String testFileName3 = "./resources/codeGenerator3";
+	private String testFileName4 = "./resources/codeGenerator4";
 	private BufferedReader reader;
 	
 	
@@ -39,6 +40,10 @@ public class testCodeGenerator
 		
 		writer = new PrintWriter(testFileName3, "UTF-8");
 		writer.write("f a\nf b\na = b + 3.2\np a ");
+		writer.close();
+		
+		writer = new PrintWriter(testFileName4, "UTF-8");
+		writer.write("i a\nf b\nf c\nf e\na = 1\nb = a + 3\nc = b + a - 3.2\ne = a + b - c - c - c - c - c\np c");
 		writer.close();
 	}
 	
@@ -95,7 +100,6 @@ public class testCodeGenerator
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			fail("No exception expected");
 		}
 		
@@ -121,5 +125,28 @@ public class testCodeGenerator
 		{
 			assertEquals("b", e.getMessage());
 		}
+	}
+	
+	@Test
+	public void testMoreExpr() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName4));
+		NodeProgram np;
+		TypeChecker visitor1 = new TypeChecker();
+		CodeGenerator visitor2 = new CodeGenerator();
+		
+		np = p.parse();
+		np.accept(visitor1);
+		try
+		{
+			np.accept(visitor2);
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception expected");
+		}
+		
+		assertEquals("  \n", readDoc());
 	}
 }
