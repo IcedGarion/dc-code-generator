@@ -22,6 +22,8 @@ public class testCodeGenerator
 	private String testFileName2 = "./resources/codeGenerator2";
 	private String testFileName3 = "./resources/codeGenerator3";
 	private String testFileName4 = "./resources/codeGenerator4";
+	private String testFileName5 = "./resources/codeGenerator5";
+	private String testFileName6 = "./resources/codeGenerator6";
 	private BufferedReader reader;
 	
 	
@@ -43,7 +45,15 @@ public class testCodeGenerator
 		writer.close();
 		
 		writer = new PrintWriter(testFileName4, "UTF-8");
-		writer.write("i a\nf b\nf c\nf e\na = 1\nb = a + 3\nc = b + a - 3.2\ne = a + b - c - c - c - c - c\np c");
+		writer.write("i a\nf b\nf c\nf e\na = 1\nb = a + 3\nc = b + a - 3.2\ne = a + b - c - c - c - c - c\np e");
+		writer.close();
+		
+		writer = new PrintWriter(testFileName5, "UTF-8");
+		writer.write("i a\nf b\nf c\na = 1\nb = a + a + a + 3\np b");
+		writer.close();
+		
+		writer = new PrintWriter(testFileName6, "UTF-8");
+		writer.write("i a\nf b\nf c\nf e\na = -1\nb = a - 3\nc = b + a - 3.2\ne = a + b - c + c\np e");
 		writer.close();
 	}
 	
@@ -63,7 +73,7 @@ public class testCodeGenerator
 	}
 	/*
 	@Test
-	public void test1() throws Exception
+	public void testConst() throws Exception
 	{
 		Parser p = new Parser(new Scanner(testFileName1));
 		NodeProgram np;
@@ -85,7 +95,7 @@ public class testCodeGenerator
 	}
 	
 	@Test
-	public void test2() throws Exception
+	public void testSimple() throws Exception
 	{
 		Parser p = new Parser(new Scanner(testFileName2));
 		NodeProgram np;
@@ -107,7 +117,7 @@ public class testCodeGenerator
 	}
 	
 	@Test
-	public void test3() throws Exception
+	public void testUninitialized() throws Exception
 	{
 		Parser p = new Parser(new Scanner(testFileName3));
 		NodeProgram np;
@@ -126,11 +136,57 @@ public class testCodeGenerator
 			assertEquals("b", e.getMessage());
 		}
 	}
-	*/
+	
 	@Test
-	public void testMoreExpr() throws Exception
+	public void testMoreId() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName5));
+		NodeProgram np;
+		TypeChecker visitor1 = new TypeChecker();
+		CodeGenerator visitor2 = new CodeGenerator();
+		
+		np = p.parse();
+		np.accept(visitor1);
+		try
+		{
+			np.accept(visitor2);
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception expected");
+		}
+		
+		assertEquals(" 1 sa la la + la + 3 + sb lb p\n", readDoc());
+	}
+	
+	@Test
+	public void testMoreId2() throws Exception
 	{
 		Parser p = new Parser(new Scanner(testFileName4));
+		NodeProgram np;
+		TypeChecker visitor1 = new TypeChecker();
+		CodeGenerator visitor2 = new CodeGenerator();
+		
+		np = p.parse();
+		np.accept(visitor1);
+		try
+		{
+			np.accept(visitor2);
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception expected");
+		}
+		
+		assertEquals(" 1 sa la 3 + sb lb la + 3.2 - sc la lb + lc - lc - lc - lc - lc - se le p\n", readDoc());
+	}
+	*/
+	@Test
+	public void testNeg1() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName6));
 		NodeProgram np;
 		TypeChecker visitor1 = new TypeChecker();
 		CodeGenerator visitor2 = new CodeGenerator();

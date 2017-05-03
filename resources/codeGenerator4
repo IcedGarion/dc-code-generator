@@ -6,4 +6,4 @@ a = 1
 b = a + 3
 c = b + a - 3.2
 e = a + b - c - c - c - c - c
-p c
+p e

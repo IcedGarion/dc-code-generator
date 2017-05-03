@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Stack;
 import ast.LangOper;
+import ast.LangType;
 import ast.NodeAssign;
 import ast.NodeBinOp;
 import ast.NodeConv;
@@ -92,7 +93,18 @@ public class CodeGenerator extends AbsVisitor
 	@Override
 	public void visit(NodeCost n)
 	{
-		writer.write(" " + n.toString());
+		float value;
+		
+		//se il valore è negativo toglie il '-' e sostituisce con '_'
+		if(n.getType() == LangType.FLOAT)
+			value = Float.parseFloat(n.toString());
+		else
+			value = Integer.parseInt(n.toString());
+		
+		if(value < 0)
+			writer.write(" " + n.toString().replace('-', '_'));
+		else
+			writer.write(" " + n.toString());
 	}
 
 	@Override
@@ -125,6 +137,8 @@ public class CodeGenerator extends AbsVisitor
 	
 	private void visitRic(NodeBinOp n) throws FileNotFoundException, UnsupportedEncodingException, TypeException, VariableNotInizializedException
 	{
+		n.getLeft().accept(this);						//gestisce operatore sinistro (NodeConst o NodeDeref)
+		
 		if(n.getOperation().equals(LangOper.MINUS))		//gestisce operatori
 		{
 			while(! operators.empty())
@@ -139,8 +153,6 @@ public class CodeGenerator extends AbsVisitor
 				
 			operators.push("+");
 		}
-		
-		n.getLeft().accept(this);						//gestisce operatore sinistro (NodeConst o NodeDeref)
 		
 		if(n.getRight() instanceof NodeBinOp)			//poi se la parte destra è un'altra operazione,
 			visitRic((NodeBinOp) n.getRight());			//chiama in ricorsione;
