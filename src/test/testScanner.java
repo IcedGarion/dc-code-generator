@@ -19,6 +19,7 @@ public class testScanner
 	private String fileName2 = "./resources/input2";
 	private String fileName3 = "./resources/input3";
 	private String fileName4 = "./resources/input4";
+	private String fileName5 = "./resources/input5";
 	private String dummyFileName = "./resources/dummy";
 	
 	@Before
@@ -41,6 +42,10 @@ public class testScanner
 		
 		writer = new PrintWriter(fileName4, "UTF-8");
 		writer.write("i a\na = _\n");
+		writer.close();
+		
+		writer = new PrintWriter(fileName5, "UTF-8");
+		writer.write("f a\na = _1.1\n");
 		writer.close();
 		
 		writer = new PrintWriter(dummyFileName, "UTF-8");
@@ -280,6 +285,28 @@ public class testScanner
 		catch(Exception e)
 		{
 			assertEquals("Illegal character: _", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testNeg4()
+	{
+		Scanner s;
+		
+		try
+		{
+			s = new Scanner(fileName5);
+			
+			assertEquals("FLOATDCL", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ASSIGN", s.nextToken().toString());
+			assertEquals("FNUM,_1.1", s.nextToken().toString());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail("No exception expected");
 		}
 	}
 }

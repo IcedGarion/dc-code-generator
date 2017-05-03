@@ -1,5 +1,9 @@
 COSE DA MIGLIORARE
 
+-meno su variabili? (_a)
+
+-usare un solo file per ogni class test
+
 -salvare i valori delle variabili in SymbolTable e non nei registri? Così non serve il boolean "inizializzata"
 
 -svuotare lo stack dopo ogni assegnamento

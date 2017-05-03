@@ -173,7 +173,7 @@ public class Scanner
 				sNext = "" + cNext;
 			}
 			
-			if(wholeNumber.matches("[0-9].[0-9]"))
+			if(wholeNumber.matches("[0-9].[0-9]") || wholeNumber.matches("_[0-9].[0-9]"))
 				return new Token(TokenType.FNUM, wholeNumber);
 			else
 				throw new LexicalException("Illegal number: " + wholeNumber);

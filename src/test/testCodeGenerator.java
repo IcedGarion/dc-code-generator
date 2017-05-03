@@ -24,6 +24,8 @@ public class testCodeGenerator
 	private String testFileName4 = "./resources/codeGenerator4";
 	private String testFileName5 = "./resources/codeGenerator5";
 	private String testFileName6 = "./resources/codeGenerator6";
+	private String testFileName7 = "./resources/codeGenerator7";
+	private String testFileName8 = "./resources/codeGenerator8";
 	private BufferedReader reader;
 	
 	
@@ -54,6 +56,14 @@ public class testCodeGenerator
 		
 		writer = new PrintWriter(testFileName6, "UTF-8");
 		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - 3\nc = b + a - 3.2\ne = a + b - c + c\np e");
+		writer.close();
+		
+		writer = new PrintWriter(testFileName7, "UTF-8");
+		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - _3\nc = b + a - _3.2\ne = a + b - c + c\np e");
+		writer.close();
+
+		writer = new PrintWriter(testFileName8, "UTF-8");
+		writer.write("f a\nf b\na = _1\nb = _a\np b");
 		writer.close();
 	}
 	
@@ -208,5 +218,47 @@ public class testCodeGenerator
 	
 	@Test
 	public void testNeg2() throws Exception
-	{}
+	{
+		Parser p = new Parser(new Scanner(testFileName7));
+		NodeProgram np;
+		TypeChecker visitor1 = new TypeChecker();
+		CodeGenerator visitor2 = new CodeGenerator();
+		
+		np = p.parse();
+		np.accept(visitor1);
+		try
+		{
+			np.accept(visitor2);
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception expected");
+		}
+		
+		assertEquals(" _1 sa la _3 - sb lb la + _3.2 - sc la lb + lc - lc + se le p\n", readDoc());
+	}
+	
+	@Test
+	public void testNegVar() throws Exception
+	{
+		Parser p = new Parser(new Scanner(testFileName8));
+		NodeProgram np;
+		TypeChecker visitor1 = new TypeChecker();
+		CodeGenerator visitor2 = new CodeGenerator();
+		
+		np = p.parse();
+		np.accept(visitor1);
+		try
+		{
+			np.accept(visitor2);
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception expected");
+		}
+		
+		assertEquals(" \n", readDoc());
+	}
 }
