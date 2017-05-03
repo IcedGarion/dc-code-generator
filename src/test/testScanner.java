@@ -16,6 +16,9 @@ import scanner.Scanner;
 public class testScanner
 {
 	private String fileName = "./resources/input";
+	private String fileName2 = "./resources/input2";
+	private String fileName3 = "./resources/input3";
+	private String fileName4 = "./resources/input4";
 	private String dummyFileName = "./resources/dummy";
 	
 	@Before
@@ -28,11 +31,22 @@ public class testScanner
 		writer.write("f b\ni a\na = 5\nb = a + 3.2\np b\n");
 		writer.close();
 		
+		writer = new PrintWriter(fileName2, "UTF-8");
+		writer.write("i a\na = _1\n");
+		writer.close();
+		
+		writer = new PrintWriter(fileName3, "UTF-8");
+		writer.write("i a\na = _");
+		writer.close();
+		
+		writer = new PrintWriter(fileName4, "UTF-8");
+		writer.write("i a\na = _\n");
+		writer.close();
+		
 		writer = new PrintWriter(dummyFileName, "UTF-8");
 		writer.write(";\nà\n123g\n1.5x\nfb\ni aa\npa\n");
 		writer.close();
 	}
-	
 	
 	@Test
 	public void testException()
@@ -203,4 +217,69 @@ public class testScanner
 		}
 	}
 	
+	@Test
+	public void testNeg1()
+	{
+		Scanner s;
+		
+		try
+		{
+			s = new Scanner(fileName2);
+			
+			assertEquals("INTDCL", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ASSIGN", s.nextToken().toString());
+			assertEquals("INUM,_1", s.nextToken().toString());
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			fail("No exception expected");
+		}
+	}
+	
+	@Test
+	public void testNeg3()
+	{
+		Scanner s;
+		
+		try
+		{
+			s = new Scanner(fileName3);
+			
+			assertEquals("INTDCL", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ASSIGN", s.nextToken().toString());
+			s.nextToken();
+			fail("Exception expected");
+		}
+		catch(Exception e)
+		{
+			assertEquals("Illegal character: _", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testNeg2()
+	{
+		Scanner s;
+		
+		try
+		{
+			s = new Scanner(fileName4);
+			
+			assertEquals("INTDCL", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ID,a", s.nextToken().toString());
+			assertEquals("ASSIGN", s.nextToken().toString());
+			s.nextToken();
+			fail("Exception expected");
+		}
+		catch(Exception e)
+		{
+			assertEquals("Illegal character: _", e.getMessage());
+		}
+	}
 }

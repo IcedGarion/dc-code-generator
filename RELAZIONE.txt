@@ -6,6 +6,6 @@ COSE DA MIGLIORARE
 
 -fornire supporto alla linea di comando
 
--migliorare la scrittura dell'output, magari con dei commenti? O comunque se fallisce, non lasciare il file pieno di spazzatura
+-migliorare la scrittura dell'output, magari con dei commenti: numero riga/carattere dell'errore; se fallisce, non lasciare il file pieno di spazzatura
 
 -i vari testCodeGenerator cancellano il file dcOut a ogni lettura

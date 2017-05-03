@@ -93,18 +93,7 @@ public class CodeGenerator extends AbsVisitor
 	@Override
 	public void visit(NodeCost n)
 	{
-		float value;
-		
-		//se il valore è negativo toglie il '-' e sostituisce con '_'
-		if(n.getType() == LangType.FLOAT)
-			value = Float.parseFloat(n.toString());
-		else
-			value = Integer.parseInt(n.toString());
-		
-		if(value < 0)
-			writer.write(" " + n.toString().replace('-', '_'));
-		else
-			writer.write(" " + n.toString());
+		writer.write(" " + n.toString());
 	}
 
 	@Override

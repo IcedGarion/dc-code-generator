@@ -53,7 +53,7 @@ public class testCodeGenerator
 		writer.close();
 		
 		writer = new PrintWriter(testFileName6, "UTF-8");
-		writer.write("i a\nf b\nf c\nf e\na = -1\nb = a - 3\nc = b + a - 3.2\ne = a + b - c + c\np e");
+		writer.write("i a\nf b\nf c\nf e\na = _1\nb = a - 3\nc = b + a - 3.2\ne = a + b - c + c\np e");
 		writer.close();
 	}
 	
@@ -71,7 +71,7 @@ public class testCodeGenerator
 		
 		return out;
 	}
-	/*
+	
 	@Test
 	public void testConst() throws Exception
 	{
@@ -182,7 +182,7 @@ public class testCodeGenerator
 		
 		assertEquals(" 1 sa la 3 + sb lb la + 3.2 - sc la lb + lc - lc - lc - lc - lc - se le p\n", readDoc());
 	}
-	*/
+	
 	@Test
 	public void testNeg1() throws Exception
 	{
@@ -203,6 +203,10 @@ public class testCodeGenerator
 			fail("Exception expected");
 		}
 		
-		assertEquals("  \n", readDoc());
+		assertEquals(" _1 sa la 3 - sb lb la + 3.2 - sc la lb + lc - lc + se le p\n", readDoc());
 	}
+	
+	@Test
+	public void testNeg2() throws Exception
+	{}
 }

@@ -62,7 +62,7 @@ public class Scanner
 			// A questo punto ho un carattere non blank: se è una cifra,
 			// controllo int/float
 			sNext = "" + cNext;
-			if(sNext.matches("[0-9]"))
+			if(sNext.matches("[0-9]|_"))
 				retToken = scanNumber(sNext);
 			else
 			{
@@ -114,12 +114,16 @@ public class Scanner
 	private Token scanNumber(String firstDigit) throws LexicalException, IOException
 	{
 		String wholeNumber = firstDigit;
+		boolean minus;
 		int next = buffer.read();
 		char cNext;
 		String sNext;
 		
-		if(next == -1)						//se capita un EOF dopo una cifra la ritorna
+		minus = firstDigit.equals("_");
+		if((next == -1) && !(minus))						//se capita un EOF dopo una cifra la ritorna
 			return new Token(TokenType.INUM, wholeNumber);
+		else if((next == -1) && (minus))
+			throw new LexicalException("Illegal character: " + firstDigit);
 		
 		cNext = (char) next;										//legge fino al '.' o fino a un blank
 		sNext = "" + cNext;
@@ -132,7 +136,12 @@ public class Scanner
 			next = buffer.read();
 			cNext = (char) next;
 			sNext = "" + cNext;
+			minus = false;
 		}
+		
+		//se c'è stato solo "-\n"
+		if(minus)
+			throw new LexicalException("Illegal character: _");
 		
 		//se capita un EOF dopo una cifra la ritorna
 		if(next == -1)							
