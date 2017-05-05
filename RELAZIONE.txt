@@ -1,8 +1,8 @@
 COSE DA MIGLIORARE
 
--meno su variabili? (_a)
+-creare cartella resources (senò i test non girano su altri pc)
 
--usare un solo file per ogni class test
+-compattare tutto il traduttore in un'unica interfaccia (i vari componenti devono però chiamarsi da soli a vicenda)
 
 -salvare i valori delle variabili in SymbolTable e non nei registri? Così non serve il boolean "inizializzata"
 

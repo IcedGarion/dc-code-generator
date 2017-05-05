@@ -1,9 +1,0 @@
-i a
-f b
-f c
-f e
-a = _1
-b = a - _3
-c = b + a - _3.2
-e = a + b - c + c
-p e

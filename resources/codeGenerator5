@@ -1,6 +1,0 @@
-i a
-f b
-f c
-a = 1
-b = a + a + a + 3
-p b
