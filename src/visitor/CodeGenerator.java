@@ -68,12 +68,6 @@ public class CodeGenerator extends AbsVisitor
 		String id;
 		STEntry old, updated;
 		
-		/*	questione precisione ancora da vedere
-		//inizia cambiando la precisione, se la parte dx è float
-		if(n.getExpr().getType().equals(LangType.FLOAT))
-			writer.write(" 5k");
-		*/
-		
 		//scompone in ID ed EXPR: ID sarà il nome del registro in cui salvare il risultato
 		id = n.getId().toString();
 		

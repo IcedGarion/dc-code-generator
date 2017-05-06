@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -20,6 +21,12 @@ public class testCodeGenerator
 	private String dcOut = "./resources/dcOut";
 	private String fileName = "./resources/testCodeGenerator";
 	private BufferedReader reader;
+	
+	@Before
+	public void createDir()
+	{
+		new File("resources").mkdir();
+	}
 	
 	private String readDoc() throws Exception
 	{

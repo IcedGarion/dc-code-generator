@@ -1,15 +1,31 @@
 COSE DA MIGLIORARE
 
--creare cartella resources (senò i test non girano su altri pc)
+-cambio precisione???
 
--compattare tutto il traduttore in un'unica interfaccia (i vari componenti devono però chiamarsi da soli a vicenda)
+-se cambia la grammatica o se si vogliono aggiungere funzionalità, bisogna comunque modificare tutti i componenti (nuovi Tokens/caratteri riconosciuti, nuova grammatica, nuove istruzioni da generare)
 
--salvare i valori delle variabili in SymbolTable e non nei registri? Così non serve il boolean "inizializzata"
+-compattare tutto il traduttore in un'unica interfaccia (i vari componenti devono però chiamarsi da soli a vicenda, come da UML)
 
--svuotare lo stack dopo ogni assegnamento
+-salvare i valori delle variabili in SymbolTable e non nei registri, così non serve il boolean "inizializzata" (però viene fatto dalla logica del dc, quindi il nostro traduttore non "vede" i valori)
 
 -fornire supporto alla linea di comando
 
 -migliorare la scrittura dell'output, magari con dei commenti: numero riga/carattere dell'errore; se fallisce, non lasciare il file pieno di spazzatura
 
 -i vari testCodeGenerator cancellano il file dcOut a ogni lettura
+
+
+COSE IMPARATE
+
+-Progetto complesso con molti componenti che interagiscono: testing dei singoli componenti, test delle loro interazioni. Test importante per progetti non semplici.
+
+-controllo versione per tracciare le modifiche
+
+
+DIFFICOLTÀ
+
+-quando cambia un requisito, o ci sono delle correzioni da fare, è difficile ricordarsi come erano implementate le varie funzioni dei componenti "vecchi", se serve modificarli, quindi qualche difficoltà nella manutenzione.
+
+-se un componente non è stato testato in modo esaustivo, capita che poi testando nuovi componenti si riscontrano errori incompreisibili causati da vecchi componenti non testati bene: situazione di prima (difficile ricordare cosa manca, perchè non va, e ricominciare a testare da quello).
+
+

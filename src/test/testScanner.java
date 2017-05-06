@@ -1,11 +1,12 @@
 package test;
 
 import static org.junit.Assert.*;
-
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import org.junit.Before;
 import org.junit.Test;
 import scanner.LexicalException;
 import scanner.Scanner;
@@ -13,6 +14,12 @@ import scanner.Scanner;
 public class testScanner
 {
 	private String fileName = "./resources/testScanner";
+	
+	@Before
+	public void createDir()
+	{
+		new File("resources").mkdir();
+	}
 	
 	@Test
 	public void testException() throws FileNotFoundException, UnsupportedEncodingException

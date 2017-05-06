@@ -1,8 +1,9 @@
 package test;
 
 import static org.junit.Assert.*;
-
+import java.io.File;
 import java.io.PrintWriter;
+import org.junit.Before;
 import org.junit.Test;
 import ast.NodeProgram;
 import parser.Parser;
@@ -13,6 +14,12 @@ import typecheck.TypeException;
 public class testTypeCheck
 {
 	private String fileName = "./resources/testTypeCheck";
+	
+	@Before
+	public void createDir()
+	{
+		new File("resources").mkdir();
+	}
 	
 	@Test
 	public void testExc1() throws Exception
