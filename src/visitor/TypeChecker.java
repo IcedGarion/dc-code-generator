@@ -1,6 +1,5 @@
 package visitor;
 
-import java.io.FileNotFoundException;
 import ast.LangType;
 import ast.NodeAssign;
 import ast.NodeBinOp;
@@ -17,14 +16,26 @@ import symTable.SymTable;
 import typecheck.TypeCheckingUtil;
 import typecheck.TypeException;
 
+/**
+ * Class TypeChecker decora l'albero sintattico prodotto dal Parser e aggiunge informazioni
+ * sul tipo delle variabili
+ * 
+ * @author Garion Musetta
+ */
 public class TypeChecker extends AbsVisitor
 {
+	/**
+	 * 
+	 * @param nodeProgram							il nodo principale dell'albero sintattico, che contiene tutti gli altri e da cui parte la visita
+	 * @throws TypeException						Se, in un assegnamento, l'id a sinistra non è di un tipo compatibile con la espressione a destra		
+	 * @throws VariabileNotInizializedException		legato al CodeGenerator
+	 */
 	@Override
-	public void visit(NodeProgram np) throws TypeException, VariableNotInizializedException
+	public void visit(NodeProgram nodeProgram) throws TypeException, VariableNotInizializedException
 	{
-		for (NodeDecl d : np.getDecl())
+		for (NodeDecl d : nodeProgram.getDecl())
 			d.accept(this);
-		for (NodeStm s : np.getStms())
+		for (NodeStm s : nodeProgram.getStms())
 			s.accept(this);
 	}
 	

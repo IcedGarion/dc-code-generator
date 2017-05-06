@@ -43,10 +43,11 @@ public class CodeGenerator extends AbsVisitor
 	}
 	
 	/**
-	 * Visita nodeProgram e tutti gli altri nodi che contiene, e genera codice dc in un file dcOut
+	 * Visita nodeProgram e tutti gli altri nodi che contiene, e genera codice dc in un file dcOut.
+	 * Anche se tutti i metodi sono pubblici, questo dovrebbe essere l'unico punto di accesso esterno 
 	 *
 	 * @param nodeProgram						Il nodo principale dell'albero sintattico del programma, decorato con i tipi
-	 * @throws TypeException 
+	 * @throws TypeException					Collegato al typecher (bisogna tirarsi dietro l'eccezione) 
 	 * @throws VariableNotInitializedException	Se è presente una istruzione in cui compare a destra una variabile non inizializzata
 	 */
 	@Override

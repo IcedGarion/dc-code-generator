@@ -1,18 +1,15 @@
 COSE DA MIGLIORARE
 
--cambio precisione???
-
--se cambia la grammatica o se si vogliono aggiungere funzionalità, bisogna comunque modificare tutti i componenti (nuovi Tokens/caratteri riconosciuti, nuova grammatica, nuove istruzioni da generare)
+-se cambia la grammatica o se si vogliono aggiungere funzionalità, bisogna comunque modificare tutti i componenti (nuovi Tokens/caratteri riconosciuti, nuova grammatica, nuove istruzioni da generare); un miglioramento possibile sarebbe fare come JCUP e JFLEX, cioè
+definire un file di configurazione e poi generare il traduttore  partire da quelli (difficile).
 
 -compattare tutto il traduttore in un'unica interfaccia (i vari componenti devono però chiamarsi da soli a vicenda, come da UML)
 
--salvare i valori delle variabili in SymbolTable e non nei registri, così non serve il boolean "inizializzata" (però viene fatto dalla logica del dc, quindi il nostro traduttore non "vede" i valori)
+-salvare i valori delle variabili in SymbolTable e non nei registri, così non serve il boolean "inizializzata" (però i valori vengono trattati solo dalla logica del dc, quindi il nostro traduttore non "vede" i valori)
 
 -fornire supporto alla linea di comando
 
--migliorare la scrittura dell'output, magari con dei commenti: numero riga/carattere dell'errore; se fallisce, non lasciare il file pieno di spazzatura
-
--i vari testCodeGenerator cancellano il file dcOut a ogni lettura
+-migliorare la scrittura dell'output, magari con dei commenti: numero riga/carattere dell'errore; se fallisce, non lasciare il file di output pieno di spazzatura
 
 
 COSE IMPARATE
@@ -24,8 +21,8 @@ COSE IMPARATE
 
 DIFFICOLTÀ
 
--quando cambia un requisito, o ci sono delle correzioni da fare, è difficile ricordarsi come erano implementate le varie funzioni dei componenti "vecchi", se serve modificarli, quindi qualche difficoltà nella manutenzione.
+-quando cambia un requisito o se ci sono delle correzioni da fare, è difficile ricordarsi come erano implementate le varie funzioni dei componenti "vecchi", se poi serve modificarli. Quindi qualche difficoltà nella manutenzione.
 
--se un componente non è stato testato in modo esaustivo, capita che poi testando nuovi componenti si riscontrano errori incompreisibili causati da vecchi componenti non testati bene: situazione di prima (difficile ricordare cosa manca, perchè non va, e ricominciare a testare da quello).
+-se un componente non è stato testato in modo esaustivo, capita che poi testando nuovi componenti si riscontrano errori incompreisibili causati da vecchi componenti non testati bene e quindi malfunzionanti: situazione di prima (difficile ricordare cosa manca, perchè non va, e ricominciare a testare da quello).
 
 
