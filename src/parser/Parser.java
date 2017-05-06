@@ -24,15 +24,27 @@ import symTable.SymTable;
 import token.Token;
 import token.TokenType;
 
+/**
+ * Classe Parser legge uno stream di Token e controlla che la loro sequenza rispetti quella dettata dalla
+ * grammatica; inoltre produce un albero sintattico astratto, che rappresenta la struttuta del programma
+ * 
+ * @author Garion Musetta
+ */
 public class Parser
 {
 	private Scanner scanner;
 	private Token currentToken;
 	
-	
-	public Parser(Scanner s) throws IOException, SyntacticException
+	/**
+	 * Costruttore inizializza la SymbolTable e lo Scanner collegato
+	 * 
+	 * @param scanner				Uno scanner che produca Token dato un file di caratteri
+	 * @throws IOException			Se capitano errori di I/O nello Scanner
+	 * @throws SyntacticException	Se occorre un errore sintattico (sequenze non valide di Tokens)
+	 */
+	public Parser(Scanner scanner) throws IOException, SyntacticException
 	{
-		this.scanner = s;
+		this.scanner = scanner;
 		SymTable.init();
 	}
 	
@@ -44,12 +56,20 @@ public class Parser
 			throw new SyntacticException("Expected "+type+" but was "+scanner.peekToken().getType());
 	}
 	
-	public NodeProgram parse() throws Exception
+	/**
+	 * Esegue il parsing e costruisce l'albero sintattico del programma in input
+	 * 
+	 * @return									Il nodo iniziale dell'albero sintattico, che contiene gli altri
+	 * @throws IOException 						Errore I/O nello Scanner
+	 * @throws LexicalException 				Se lo Scanner legge caratteri non validi
+	 * @throws SyntacticException 				Sequenze di Token non valide
+	 */
+	public NodeProgram parse() throws LexicalException, IOException, SyntacticException 
 	{
 		return parseProg();
 	}
 	
-	private NodeProgram parseProg() throws Exception
+	private NodeProgram parseProg() throws LexicalException, IOException, SyntacticException
 	{
 		Token nxt = scanner.peekToken();
 		ArrayList<NodeDecl> decls = new ArrayList<NodeDecl>();
@@ -76,7 +96,7 @@ public class Parser
 		return new NodeProgram(decls, stms);
 	}		
 	
-	private ArrayList<NodeDecl> parseDcls() throws Exception
+	private ArrayList<NodeDecl> parseDcls() throws SyntacticException, LexicalException, IOException
 	{
 		ArrayList<NodeDecl> ret = new ArrayList<NodeDecl>();
 
@@ -85,7 +105,7 @@ public class Parser
 		return ret;
 	}
 
-	private void parseDeclRic(ArrayList<NodeDecl> ret) throws Exception, SyntacticException
+	private void parseDeclRic(ArrayList<NodeDecl> ret) throws SyntacticException, LexicalException, IOException
 	{
 		Token nxt = scanner.peekToken();
 		
@@ -111,7 +131,7 @@ public class Parser
 		}
 	}
 	
-	private NodeDecl parseDcl() throws Exception
+	private NodeDecl parseDcl() throws LexicalException, IOException, SyntacticException
 	{
 		Token nxt = scanner.peekToken();
 		NodeDecl ret = null;
@@ -155,7 +175,7 @@ public class Parser
 		return ret;
 	}
 	
-	private ArrayList<NodeStm> parseStms() throws Exception
+	private ArrayList<NodeStm> parseStms() throws SyntacticException, LexicalException, IOException
 	{
 		ArrayList<NodeStm> ret = new ArrayList<NodeStm>();
 		
@@ -164,7 +184,7 @@ public class Parser
 		return ret;
 	}
 
-	private void parseStmsRic(ArrayList<NodeStm> ret) throws Exception, SyntacticException
+	private void parseStmsRic(ArrayList<NodeStm> ret) throws SyntacticException, LexicalException, IOException
 	{
 		Token nxt = scanner.peekToken();
 		
@@ -186,7 +206,7 @@ public class Parser
 		}
 	}
 	
-	private NodeStm parseStm() throws Exception
+	private NodeStm parseStm() throws LexicalException, IOException, SyntacticException
 	{
 		Token nxt = scanner.peekToken();
 		NodeStm ret;
@@ -220,7 +240,7 @@ public class Parser
 		return ret;
 	}
 	
-	private NodeExpr parseExpr(NodeExpr val) throws Exception
+	private NodeExpr parseExpr(NodeExpr val) throws LexicalException, IOException, SyntacticException
 	{
 		Token nxt = scanner.peekToken();
 		NodeExpr ret = null;
@@ -261,7 +281,7 @@ public class Parser
 		return ret;
 	}
 	
-	private NodeExpr parseVal() throws Exception
+	private NodeExpr parseVal() throws LexicalException, IOException, SyntacticException
 	{
 		Token nxt = scanner.peekToken();
 		NodeExpr ret;
@@ -294,9 +314,6 @@ public class Parser
 					ret.setType(LangType.INT);
 				else if(SymTable.lookup(ret.toString()).getType() == LangType.FLOAT)
 					ret.setType(LangType.FLOAT);
-				else
-					throw new Exception(ret.toString() + ": Variable not declared");
-				
 				break;
 			}
 			default:

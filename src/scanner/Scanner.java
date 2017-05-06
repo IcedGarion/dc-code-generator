@@ -8,6 +8,11 @@ import scanner.LexicalException;
 import token.Token;
 import token.TokenType;
 
+/**
+ * Classe Scanner legge da un file di input carattere per carattere restituendo Token di diverso tipo
+ * 
+ * @author Garion Musetta 
+ */
 public class Scanner
 {
 	private PushbackReader buffer;
@@ -17,11 +22,26 @@ public class Scanner
 			TokenType.ASSIGN, TokenType.PLUS, TokenType.MINUS};
 	private Token currentToken;
 	
-	public Scanner(String fileName) throws FileNotFoundException
+	/**
+	 * Costruttore: inizializza il Reader (buffer) con il PATH del file di input
+	 * 
+	 * @param fileName					nome del path del file input da leggere
+	 * @throws FileNotFoundException	se il file non esiste
+	 */
+	public Scanner(String filePath) throws FileNotFoundException
 	{
-		buffer = new PushbackReader(new FileReader(fileName));
+		buffer = new PushbackReader(new FileReader(filePath));
 	}
 	
+	/**
+	 * Restituisce l'ultimo Token letto: più chiamate a peekToken restituiscono sempre quello:
+	 * se non era ancora stato letto niente, legge dall'input; se era già stato letto un token,
+	 * ritorna sempre quello 
+	 * 
+	 * @return						Ultimo Token letto
+	 * @throws LexicalException		se legge caratteri non validi (non nella grammatica)
+	 * @throws IOException			se capitano errori di I/O
+	 */
 	public Token peekToken() throws LexicalException, IOException
 	{
 		if(currentToken == null)
@@ -30,6 +50,13 @@ public class Scanner
 		return currentToken;
 	}
 	
+	/**
+	 * Legge dall'input e restituisce un TOKEN corrispondente a quello che ha letto (fino allo spazio)
+	 * 
+	 * @return						Un Token 
+	 * @throws LexicalException		se legge caratteri non validi (non nella grammatica)
+	 * @throws IOException			se capitano errori di I/O
+	 */
 	public Token nextToken() throws LexicalException, IOException
 	{
 		int next;

@@ -3,7 +3,6 @@ package visitor;
 import java.io.FileNotFoundException;
 
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Stack;
 import ast.LangOper;
 import ast.NodeAssign;
@@ -20,22 +19,40 @@ import symTable.STEntry;
 import symTable.SymTable;
 import typecheck.TypeException;
 
+/**
+ * Class CodeGenerator genera codice dc a partire da un albero sintattico decorato con i tipi
+ * (AST generato da TypeChecker)
+ * 
+ * @author Garion Musetta
+ */
 public class CodeGenerator extends AbsVisitor
 {
 	private final String outputFileName = "./resources/dcOut";
 	private PrintWriter writer;
 	private Stack<String> operators;
 	
-	public CodeGenerator() throws FileNotFoundException, UnsupportedEncodingException
+	/**
+	 * Costruttore: inizializza i campi del CodeGenerator e crea il file di output
+	 * 
+	 * @throws FileNotFoundException			Se non riesce a generare il file di output	
+	 */
+	public CodeGenerator() throws FileNotFoundException
 	{
-		writer = new PrintWriter(outputFileName, "UTF-8");	
+		writer = new PrintWriter(outputFileName);	
 		operators = new Stack<String>();
 	}
 	
+	/**
+	 * Visita nodeProgram e tutti gli altri nodi che contiene, e genera codice dc in un file dcOut
+	 *
+	 * @param nodeProgram						Il nodo principale dell'albero sintattico del programma, decorato con i tipi
+	 * @throws TypeException 
+	 * @throws VariableNotInitializedException	Se è presente una istruzione in cui compare a destra una variabile non inizializzata
+	 */
 	@Override
-	public void visit(NodeProgram n) throws FileNotFoundException, UnsupportedEncodingException, TypeException, VariableNotInizializedException
+	public void visit(NodeProgram nodeProgram) throws VariableNotInizializedException, TypeException
 	{
-		for(NodeStm nd : n.getStms())
+		for(NodeStm nd : nodeProgram.getStms())
 			nd.accept(this);
 		
 		writer.write("\n");
@@ -63,7 +80,7 @@ public class CodeGenerator extends AbsVisitor
 	}
 
 	@Override
-	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void visit(NodeAssign n) throws VariableNotInizializedException, TypeException
 	{
 		String id;
 		STEntry old, updated;
@@ -107,7 +124,7 @@ public class CodeGenerator extends AbsVisitor
 	}
 
 	@Override
-	public void visit(NodeBinOp n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void visit(NodeBinOp n) throws VariableNotInizializedException, TypeException
 	{
 		//visita tutta la expr e stampa trasformata
 		visitRic(n);
@@ -117,7 +134,7 @@ public class CodeGenerator extends AbsVisitor
 			writer.write(" " + operators.pop());
 	}
 	
-	private void visitRic(NodeBinOp n) throws FileNotFoundException, UnsupportedEncodingException, TypeException, VariableNotInizializedException
+	private void visitRic(NodeBinOp n) throws VariableNotInizializedException, TypeException
 	{
 		n.getLeft().accept(this);						//gestisce operatore sinistro (NodeConst o NodeDeref)
 		

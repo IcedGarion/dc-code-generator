@@ -1,7 +1,6 @@
 package visitor;
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import ast.LangType;
 import ast.NodeAssign;
 import ast.NodeBinOp;
@@ -21,7 +20,7 @@ import typecheck.TypeException;
 public class TypeChecker extends AbsVisitor
 {
 	@Override
-	public void visit(NodeProgram np) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void visit(NodeProgram np) throws TypeException, VariableNotInizializedException
 	{
 		for (NodeDecl d : np.getDecl())
 			d.accept(this);
@@ -30,7 +29,7 @@ public class TypeChecker extends AbsVisitor
 	}
 	
 	@Override
-	public void visit(NodeBinOp n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void visit(NodeBinOp n) throws TypeException, VariableNotInizializedException
 	{
 		NodeExpr result[];
 		
@@ -50,7 +49,7 @@ public class TypeChecker extends AbsVisitor
 	}
 	
 	@Override
-	public void visit(NodeAssign n) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void visit(NodeAssign n) throws TypeException, VariableNotInizializedException
 	{
 		LangType exprType;
 		LangType idType;
@@ -60,7 +59,6 @@ public class TypeChecker extends AbsVisitor
 		tmp.accept(this);
 		
 		//poi controlla se 'id è dello stesso tipo dell'espressione
-		//(quindi accept sulle expr diventa inutile)
 		exprType = tmp.getType();
 		idType = SymTable.lookup(n.getId().toString()).getType();
 		

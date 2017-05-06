@@ -1,9 +1,6 @@
 package ast;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
 import typecheck.TypeException;
 import visitor.AbsVisitor;
 import visitor.VariableNotInizializedException;
@@ -37,7 +34,7 @@ public class NodeProgram extends NodeAST
 	}
 	
 	@Override
-	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void accept(AbsVisitor visitor) throws VariableNotInizializedException, TypeException
 	{
 		visitor.visit(this);
 	}

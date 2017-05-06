@@ -1,7 +1,5 @@
 package ast;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import typecheck.TypeException;
 import visitor.AbsVisitor;
 import visitor.VariableNotInizializedException;
@@ -41,7 +39,7 @@ public class NodeBinOp extends NodeExpr
 	}
 	
 	@Override
-	public void accept(AbsVisitor visitor) throws TypeException, FileNotFoundException, UnsupportedEncodingException, VariableNotInizializedException
+	public void accept(AbsVisitor visitor) throws VariableNotInizializedException, TypeException
 	{
 		visitor.visit(this);
 	}
