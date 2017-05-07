@@ -239,4 +239,33 @@ public class testCodeGenerator
 		
 		assertEquals(" _1 sa la _3 - sb lb la + _3.2 - sc la lb + lc - lc + se le p\n", readDoc());
 	}
+	
+	@Test
+	public void testComplex() throws Exception
+	{
+		PrintWriter writer;
+		
+		writer = new PrintWriter(fileName, "UTF-8");
+		writer.write("i a\ni k\nf b\nf c\nf e\nf g\na = _1\nk = 10000\nb = a - _3\nc = k - b + a - _3.2\ne = a + b - c + c + k - _100\np e");
+		writer.close();
+		
+		Parser p = new Parser(new Scanner(fileName));
+		NodeProgram np;
+		TypeChecker visitor1 = new TypeChecker();
+		CodeGenerator visitor2 = new CodeGenerator();
+		
+		np = p.parse();
+		np.accept(visitor1);
+		try
+		{
+			np.accept(visitor2);
+			
+		}
+		catch(Exception e)
+		{
+			fail("Exception expected");
+		}
+		
+		assertEquals(" _1 sa 10000 sk la _3 - sb lk lb - la + _3.2 - sc la lb + lc - lc + lk + _100 - se le p\n", readDoc());
+	}
 }
