@@ -2,9 +2,10 @@
 
 **Uniupo university, Science & Technologic Innovation dept., Language&Translators Laboratory Project**
 
-This repository is about a simple application translating code written in AC (a basic "programming" language) into code readable (and executable) by UNIX DC calculator. (try typing "dc" in your linux bash!)
+This repository is about a simple application translating code written in AC (a basic "programming" language) into code readable and executable by UNIX DC calculator.
 
-The input AC program is stored in "input.txt" file.
+Try typing "dc" in your linux bash!
+
 
 AC instructions are like the followings:
 
@@ -23,3 +24,5 @@ the corresponding DC instruction generated is:
 10 sb lb 3.2 + sa la p
 
 This single-line instruction can then be pasted in dc and executed
+
+The input AC program is stored in "resources/input.txt" file, and the output DC program is then written in "resources/dcOut"
